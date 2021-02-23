@@ -7,13 +7,14 @@ def peak_sides(price: float, pre: bool):
     count = range(1, 3) if pre else range(7, 0, -1)
 
     for i in count:
-        r = random.getrandbits(0)
-        if r == 0:
-            rate_of_change = 0.10
-        elif r == 1:
-            rate_of_change = 0.15
-        else:
-            rate_of_change = 0.20
+        rate_of_change = random.uniform(0.1, 0.2)
+        # r = random.getrandbits(0)
+        # if r == 0:
+        #     rate_of_change = 0.10
+        # elif r == 1:
+        #     rate_of_change = 0.15
+        # else:
+        #     rate_of_change = 0.20
 
         p = random.uniform(price * rate_of_change * i,
                 price * ((rate_of_change * i) + rate_of_change))
