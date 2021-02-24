@@ -2,35 +2,118 @@ import numpy as np
 from scipy.optimize import linprog
 from objects import ElAppliance, Household
 
-ev = ElAppliance("Electric Vehicle", 3.3, 3.3, 3)
+
+# Create vectors and matrices that define equality constraints
+def eq_constraints(house: Household, hours = 24):
+    A_eq, b_eq = [], []
+    index, appliance_index = 0, 1
+
+    for a in house.elAppliance:
+        a_eq = []
+
+        if index > 0:
+            for h in range(0, index):
+                a_eq.insert(h, 0)
+
+        for h in range(index, hours * appliance_index):
+            a_eq.insert(h, 1)
+
+        if appliance_index * hours < hours * len(house.elAppliance):
+            for h in range(hours * appliance_index, hours * len(house.elAppliance)):
+                a_eq.insert(h, 0)
+
+        index = hours * appliance_index
+        appliance_index += 1
+
+        A_eq.append(a_eq)
+        b_eq.append(a.dailyUsageMax)
+
+    return A_eq, b_eq
+ #   for a in house.elAppliance:
+ #       a_eq = []
+ #
+
+ #       for h in range(index, hours * day_index):
+ #           a_eq.insert(h, 1)
+
+
+ #       if index > 0:
+ #           for h in range(0, index):
+ #               a_eq.insert(h, 0)
+
+ #       for h in range(index, index + a.duration):
+ #           a_eq.insert(h, 1)
+
+ #       for h in range(index + a.duration, hours):
+ #           a_eq.insert(h, 0)
+
+ #       index = index + a.duration
+ #       A_eq.append(a_eq)
+ #       b_eq.append(a.dailyUsageMax)
+
+ #   return A_eq, b_eq
+
+# Create vectors and matrices that define the inequality constraints
+def ub_constraints(house: Household, hours = 24):
+    A_ub, b_ub = [], []
+    index, appliance_index = 0, 1
+
+    for a in house.elAppliance:
+
+        for rows in range(hours):
+            a_ub = []
+
+            if index > 0:
+                for h in range(0, index):
+                    a_ub.insert(h, 0)
+
+            a_ub.insert(index, 1)
+            index += 1
+
+            for h in range(index, hours * len(house.elAppliance)):
+                a_ub.insert(h, 0)
+
+            A_ub.append(a_ub)
+            b_ub.append(round(a.dailyUsageMax / float(a.duration), 3))
+
+        index = hours * appliance_index
+        appliance_index += 1
+
+    return A_ub, b_ub
+
+
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3)
+lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4)
 dw = ElAppliance("Dishwasher", 1.44, 1.44, 1)
-lm = ElAppliance("Laundry Machine", 1.94, 1.94, 1)
 
-house = Household("Mi Casa", [ev, dw, lm])
+house = Household("Mi Casa", [ev, lm, dw])
 
-prices = np.zeros(24)
-
-for i in range(len(prices)):
-    prices[i] = 1 if 17 <= i <= 20 else 0.5
-
-A_ub = []
-H = 23
-
-# print(house)
-# print(house.elAppliance)
-for a in house.elAppliance:
-    a_ub = []
-
-    for h in range(a.duration):
-        a_ub.insert(h, 1)
-
-    for h in range(a.duration, H + 1):
-        a_ub.insert(h, 0)
-
-    print(a_ub)
+A_eq, b_eq = eq_constraints(house)
+A_ub, b_ub = ub_constraints(house)
 
 
+prices = []
+for i in range(24):
+    prices.insert(i, 1) if 17 <= i <= 20 else prices.insert(i, 0.5)
 
+cost_function_price_vector = []
+for i in range(len(house.elAppliance)):
+    cost_function_price_vector += prices
 
+# print(len(prices))
+# print(len(cost_function_price_vector))
+# print(len(A_ub))
+print(len(b_ub))
+print(b_ub)
+# print(len(A_eq))
+# print(A_eq)
+# print(len(b_eq))
+# print(b_eq)
+# print(A_eq)
+# print(A_ub)
+#
+res = linprog(cost_function_price_vector,
+        A_ub=A_ub, b_ub=b_ub,
+        A_eq=A_eq, b_eq=b_eq)
 
-
+print(res)
