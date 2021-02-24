@@ -24,7 +24,7 @@ def peak_sides(price: float, pre: bool):
     return arr
 
 
-def daily_price(pr_max: float, pr_min: float):
+def daily_price(pr_min: float, pr_max: float):
     peak_morning = random.uniform((pr_max * 0.55), (pr_max * 0.9))
     peak_evening = random.uniform((pr_max * 0.65), pr_max)
     morning_pre = peak_sides(peak_morning, True)
@@ -51,8 +51,8 @@ def plot_prices(prs: list):
     plt.xticks(hours)
     plt.show()
 
-price_max = 2.0
-price_min = 0.1
-prices = daily_price(price_max, price_min)
-
-plot_prices(prices)
+# price_max = 2.0
+# price_min = 0.1
+# prices = daily_price(price_max, price_min)
+#
+# plot_prices(prices)
