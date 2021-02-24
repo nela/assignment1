@@ -32,3 +32,5 @@ b_eq = np.array([9.9, 5.0])
 
 res = linprog(c, A_ub=A_ineq, b_ub=b_ineq, A_eq=A_eq, b_eq=b_eq)
 print(res)
+
+
