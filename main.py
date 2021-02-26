@@ -15,3 +15,10 @@ if __name__ == "__main__":
     for x in range(len(myNeighborhood.houses)):
         myNeighborhood.printInfo(x)
 
+    testHouseRandom =Household("random")
+    testHouseRandom.makeElappliances(5)
+
+    myNeighborhood.houses.append(testHouseRandom)
+
+    for x in range(len(myNeighborhood.houses)):
+        myNeighborhood.printInfo(x)
