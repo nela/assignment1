@@ -29,29 +29,7 @@ def eq_constraints(house: Household, hours = 24):
         b_eq.append(a.dailyUsageMax)
 
     return A_eq, b_eq
- #   for a in house.elAppliance:
- #       a_eq = []
- #
 
- #       for h in range(index, hours * day_index):
- #           a_eq.insert(h, 1)
-
-
- #       if index > 0:
- #           for h in range(0, index):
- #               a_eq.insert(h, 0)
-
- #       for h in range(index, index + a.duration):
- #           a_eq.insert(h, 1)
-
- #       for h in range(index + a.duration, hours):
- #           a_eq.insert(h, 0)
-
- #       index = index + a.duration
- #       A_eq.append(a_eq)
- #       b_eq.append(a.dailyUsageMax)
-
- #   return A_eq, b_eq
 
 # Create vectors and matrices that define the inequality constraints
 def ub_constraints(house: Household, hours = 24):
@@ -82,8 +60,8 @@ def ub_constraints(house: Household, hours = 24):
     return A_ub, b_ub
 
 
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3)
-lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4)
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=0, timeMax=8)
+lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4, timeMin=8, timeMax=17)
 dw = ElAppliance("Dishwasher", 1.44, 1.44, 1)
 
 house = Household("Mi Casa", [ev, lm, dw])
