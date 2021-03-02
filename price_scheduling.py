@@ -66,8 +66,6 @@ def get_price_schedule_pr_appliance(appliance: ElAppliance, hourly_prices):
 
     return np.round_(prices, decimals=2)
 
-
-
 # Generate hourly prices as in task 1
 # hourly_prices = []
 # for i in range(24):
@@ -78,26 +76,30 @@ def get_price_schedule_pr_appliance(appliance: ElAppliance, hourly_prices):
 # hourly_prices = daily_price(0.2, 0.8)
 
 # Or define them yourself so you can clearly see whats going on
-hourly_prices = [0.1, 0.1,
-        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+# hourly_prices = [0.1, 0.1,
+#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+#
+# # Create an appliance object
+# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=21, timeMax=8)
+#
+# # Get the total price schedule
+# price_schedule = get_price_schedule_pr_appliance(ev, hourly_prices)
+# print("Price Schedule:", price_schedule)
+#
+# # Find the minial price
+# minimal_price = np.amin(price_schedule)
+# print("Minimal total price: ", minimal_price)
+#
+# # The index of the minimal price is the optimal hour counting from the
+# # appliances lowest operational hour, ie. appliance.timeMin.
+# # Therefore if the appliance.timeMin > 0, it always the offsets the index
+# # by that amount, and therefore that needs to be added in order to find the
+# # hour not dependent on th appliance.timeMin
+#
+# optimal_hour = np.argmin(price_schedule) + ev.timeMin
+# print("The optimal hour with minimal price: ", optimal_hour)
 
-# Create an appliance object
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=21, timeMax=8)
 
-# Get the total price schedule
-price_schedule = get_price_schedule_pr_appliance(ev, hourly_prices)
-print("Price Schedule:", price_schedule)
-
-# Find the minial price
-minimal_price = np.amin(price_schedule)
-print("Minimal total price: ", minimal_price)
-
-# The index of the minimal price is the optimal hour counting from the
-# appliances lowest operational hour, ie. appliance.timeMin.
-# Therefore if the appliance.timeMin > 0, it always the offsets the index
-# by that amount, and therefore that needs to be added in order to find the
-# hour not dependent on th appliance.timeMin
-
-optimal_hour = np.argmin(price_schedule) + ev.timeMin
-print("The optimal hour with minimal price: ", optimal_hour)
+dd = daily_price(0.5, 1.0)
+print(dd)

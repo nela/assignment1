@@ -2,7 +2,7 @@ import random
 import matplotlib.pyplot as plt
 
 
-def peak_sides(price: float, pre: bool):
+def peak_sides(price: float, pr_min: float, pr_max: float, pre: bool):
     arr = []
     count = range(1, 3) if pre else range(7, 0, -1)
 
@@ -18,7 +18,6 @@ def peak_sides(price: float, pre: bool):
 
         p = random.uniform(price * rate_of_change * i,
                 price * ((rate_of_change * i) + rate_of_change))
-
         arr.append(p)
 
     return arr
@@ -26,7 +25,9 @@ def peak_sides(price: float, pre: bool):
 
 def daily_price(pr_min: float, pr_max: float):
     peak_morning = random.uniform((pr_max * 0.55), (pr_max * 0.9))
+    print(peak_morning)
     peak_evening = random.uniform((pr_max * 0.65), pr_max)
+    print(peak_evening)
     morning_pre = peak_sides(peak_morning, True)
     morning_post = peak_sides(peak_morning, False)
     evening_pre = peak_sides(peak_evening, True)
@@ -42,7 +43,7 @@ def daily_price(pr_min: float, pr_max: float):
     return prices
 
 
-def plot_prices(prs: list):
+def plot_prices(prices: list):
     hours = []
     for i in range(24):
         hours.append(i)
@@ -51,8 +52,9 @@ def plot_prices(prs: list):
     plt.xticks(hours)
     plt.show()
 
-# price_max = 2.0
-# price_min = 0.1
-# prices = daily_price(price_max, price_min)
-#
-# plot_prices(prices)
+price_max = 1.0
+price_min = 0.5
+prices = daily_price(price_min, price_max)
+print(prices)
+
+plot_prices(prices)
