@@ -1,5 +1,5 @@
 import random
-
+from generate_rt_prices import daily_price
 
 class ElAppliance:
     def __init__(self,name,dailyUsageMin,dailyUsageMax,duration,timeMin = 0,timeMax = 23):
@@ -71,6 +71,9 @@ class Neighborhood:
                     self.dailyPowerTimetable.insert(x, 1)
                 else:
                     self.dailyPowerTimetable.insert(x, 0.5)
+        if type == "RTP":
+            self.dailyPowerTimetable = daily_price(0.5,1)
+
 
     def __init__(self,name,priceScheme):
         #inizalise
