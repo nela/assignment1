@@ -2,6 +2,7 @@ import random
 from generate_rt_prices import daily_price
 
 class ElAppliance:
+    #type : 1 = shiftable, 2 = non-shiftable non-continious, 3 = non-shiftable
     def __init__(self,name,dailyUsageMin,dailyUsageMax,maxHourConsumption,duration,timeMin = 0,timeMax = 23, type):
         self.name = name
         self.dailyUsageMin = dailyUsageMin
