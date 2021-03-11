@@ -3,7 +3,7 @@ from generate_rt_prices import daily_price
 
 class ElAppliance:
     #type : 1 = shiftable, 2 = non-shiftable non-continious, 3 = non-shiftable
-    def __init__(self,name,dailyUsageMin,dailyUsageMax,maxHourConsumption,duration,timeMin = 0,timeMax = 23, type):
+    def __init__(self,name,dailyUsageMin,dailyUsageMax,maxHourConsumption,duration,timeMin = 0,timeMax = 23, elType):
         self.name = name
         self.dailyUsageMin = dailyUsageMin
         self.dailyUsageMax = dailyUsageMax
@@ -11,10 +11,11 @@ class ElAppliance:
         self.timeMin = timeMin
         self.timeMax = timeMax
         self.maxHourConsumption = maxHourConsumption
-        self.type = type
+        self.elType = elType
 
+        #get a random time between min and max for dailyUsage variables.
     def randomTime(self):
-        return random.randint(self.timeMin, self.timeMax)
+            return random.randint(self.timeMin, self.timeMax)
 
     def randomUsage(self):
         if self.dailyUsageMin == self.dailyUsageMax:
