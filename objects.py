@@ -1,9 +1,9 @@
 import random
-from generate_rt_prices import daily_price
+# from generate_rt_prices import daily_price
 
 class ElAppliance:
     #type : 1 = shiftable, 2 = non-shiftable non-continious, 3 = non-shiftable
-    def __init__(self,name,dailyUsageMin,dailyUsageMax,maxHourConsumption,duration,timeMin = 0,timeMax = 23, elType):
+    def __init__(self,name,dailyUsageMin,dailyUsageMax,maxHourConsumption,duration,elType,timeMin = 0,timeMax = 23):
         self.name = name
         self.dailyUsageMin = dailyUsageMin
         self.dailyUsageMax = dailyUsageMax
@@ -50,7 +50,7 @@ class Household:
         elType = [1,1,1,3,3,3,2,2,2,3,2,3]
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
-            self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elTimeMin[pick],elTimeMax[pick],elType[pick]))
+            self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
 
 
 class Neighborhood:
