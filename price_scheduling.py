@@ -69,17 +69,26 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     return price_schedule, appliance_schedule
 
 
-def sort_schedule(price_schedule, appliance_schedule):
+def sort_schedule(price_schedule, appliance_schedule, offset):
     price_hour_tmp = []
+    # The index of the minimal price is the optimal hour counting from the
+    # appliances lowest operational hour, ie. appliance.timeMin.
+    # Therefore if the appliance.timeMin > 0, it always the offsets the index
+    # by that amount, and therefore that needs to be added in order to find the
+    # hour not dependent on th appliance.timeMin
     for i in range(len(price_schedule)):
-        price_hour_tmp.append((price_schedule[i], i))
+        price_hour_tmp.append((price_schedule[i], i+offset))
 
     price_hour_min_sorted = sorted(price_hour_tmp, key=lambda x: (x[0], x[1]))
+
     appliance_schedule_min_sorted = np.zeros(
             [len(price_hour_min_sorted),len(appliance_schedule[0])])
 
+    # Sort and copy the appliance schedule to a new array
+    # Remove the offset for the indexes to make sense
     for i in range(len(price_hour_min_sorted)):
-        appliance_schedule_min_sorted[i] = appliance_schedule[price_hour_min_sorted[i][1]]
+        appliance_schedule_min_sorted[i] = appliance_schedule[
+                price_hour_min_sorted[i][1]-offset]
 
     return price_hour_min_sorted, appliance_schedule_min_sorted
 
@@ -88,17 +97,8 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     price_schedule, appliance_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
 
-    return sort_schedule(price_schedule, appliance_schedule)
+    return sort_schedule(price_schedule, appliance_schedule, appliance.timeMin)
 
-
-# Generate hourly prices as in task 1
-# hourly_prices = []
-# for i in range(24):
-#     hourly_prices.insert(i, 1) if 17 <= i <= 20 else hourly_prices.insert(i, 0.5)
-
-
-# Or generate random hourly prices as per task 2
-# hourly_prices = daily_price(0.2, 0.8)
 
 # Or define them yourself so you can clearly see whats going on
 hourly_prices = [0.1, 0.1,
@@ -106,31 +106,11 @@ hourly_prices = [0.1, 0.1,
         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
 
 # Create an appliance object
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=1, timeMax=8)
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=1, timeMax=8)
 
-# # Get the total price schedule
-# price_schedule, appliance_schedule = get_min_price_appliance_values(ev, hourly_prices)
-#
-# print("Price Schedule:", price_schedule)
-#
-# # Find the minial price
-# minimal_price = np.amin(price_schedule)
-# print("Minimal total price: ", minimal_price)
-#
-# # The index of the minimal price is the optimal hour counting from the
-# # appliances lowest operational hour, ie. appliance.timeMin.
-# # Therefore if the appliance.timeMin > 0, it always the offsets the index
-# # by that amount, and therefore that needs to be added in order to find the
-# # hour not dependent on th appliance.timeMin
-#
-# optimal_index = np.argmin(price_schedule)
-# optimal_hour = optimal_index + ev.timeMin
-# print("The optimal hour with minimal price: ", optimal_hour)
-#
-# optimal_schedule = appliance_schedule[optimal_index]
-# print(optimal_schedule)
-
+# Make the magic happen
 price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
         ev, hourly_prices)
+
 print(price_schedule)
 print(appliance_schedule)
