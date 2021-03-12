@@ -1,5 +1,6 @@
 import random
-# from generate_rt_prices import daily_price
+#from generate_rt_prices import daily_price
+#from price_scheduling import get_price_schedule_pr_appliance
 
 class ElAppliance:
     #type : 1 = shiftable, 2 = non-shiftable non-continious, 3 = non-shiftable
@@ -75,18 +76,49 @@ class Neighborhood:
             self.dailyPowerTimetable.append(0)
         self.updateTimetable(priceScheme)
 
-    #methode that plan usage of machine
-    def testUseElAppliances(self):
-        timeScedule = []
+        #methode that takes a house name and return the coresponding household object, returns None if not found
+    def getHouse(self,houseName):
+        for x in range(len(self.houses)):
+            if self.houses[x].name is houseName:
+                return self.houses[x]
+        return None
+
+    #methode that plan usage of machines for one household
+    def testUseElAppliancesSolo(self,houseName):
+        timeSchedule = []
         for x in range(24):
-            self.timeScedule.append(0)
-            # smart way, find hardest to place first, dumb way ,just put them in
-            # hard to place hirarcy:
-            # 1:strict timeslot(timeMin == timeMax or timeMin == timeMax-duration)
-            # 2:long duration with timerestriction
-            # 3:
-        for x in elAppliance:
-            pass
+            timeSchedule.append(0)
+
+        houseForSchedule = self.getHouse(houseName)
+        priorityList = []
+        for i in range(4):
+            find_type_target = 4-i
+            for appliance in houseForSchedule.elAppliance:
+                if appliance.elType == find_type_target:
+                    priorityList.append(appliance)
+
+        first = True
+        for temp_el in priorityList:
+            print(temp_el.name," : ",temp_el.elType)
+
+            ##kall på optimalisering
+            #price_schedule, appliance_schedule = get_price_schedule_pr_appliance(temp_el,dailyPowerTimetable)
+            ##first element
+            #if first == True:
+            #    for x in range(24)
+            #        timeSchedule[x] = appliance_schedule[x]
+            #    first =False
+            #else:
+            #    #find all with lowest cost
+            #    current_lowest_value = price_schedule[0]
+            #    same_value_number = 0
+            #    for x in range(len(price_schedule)):
+            #        if current_lowest_value == price_schedule[x]:
+            #            same_value_number = x
+            #    #choose best option TODO
+
+
+
 
     def printInfo(self,houseNumber):
         print("\nHouse Name: ", self.houses[houseNumber].name,"\n")
