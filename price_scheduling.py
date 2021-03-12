@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import linprog
 from objects import ElAppliance
-# from generate_rt_prices import daily_price
+
 
 def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # Get the prices for the subset of the operational times for
@@ -69,7 +69,7 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     return price_schedule, appliance_schedule
 
 
-def sort_schedule(price_schedule, appliance_schedule, offset):
+def min_sorted_schedule(price_schedule, appliance_schedule, offset):
     price_hour_tmp = []
     # The index of the minimal price is the optimal hour counting from the
     # appliances lowest operational hour, ie. appliance.timeMin.
@@ -93,24 +93,36 @@ def sort_schedule(price_schedule, appliance_schedule, offset):
     return price_hour_min_sorted, appliance_schedule_min_sorted
 
 
+def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
+    return [np.insert(np.append(a, np.zeros(24 - timeMax)), 0, np.zeros(timeMin)) for a in appliance_schedule]
+
+
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
-    price_schedule, appliance_schedule = get_min_price_appliance_values(
+    price_schedule, tmp_app_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
 
-    return sort_schedule(price_schedule, appliance_schedule, appliance.timeMin)
+    price_schedule, tmp_app_schedule = min_sorted_schedule(price_schedule,
+            appliance_schedule, appliance.timeMin)
+
+    appliance_schedule = format_24h_appliance_schedule(tmp_app_schedule,
+            appliance.timeMin, appliance.timeMax)
+
+    return price_schedule, appliance_schedule
 
 
-# Or define them yourself so you can clearly see whats going on
-hourly_prices = [0.1, 0.1,
-        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
-
-# Create an appliance object
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=1, timeMax=8)
-
-# Make the magic happen
-price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
-        ev, hourly_prices)
-
-print(price_schedule)
-print(appliance_schedule)
+# # Or define them yourself so you can clearly see whats going on
+# hourly_prices = [0.1, 0.1,
+#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+#
+# # Create an appliance object
+# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=1, timeMax=8)
+#
+# # Make the magic happen
+# price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
+#         ev, hourly_prices)
+#
+# appliance_schedule = format_24h_appliance_schedule(appliance_schedule, ev.timeMin, ev.timeMax)
+#
+# print(price_schedule)
+# print(appliance_schedule)
