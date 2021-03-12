@@ -94,7 +94,42 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
 
 
 def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
-    return [np.insert(np.append(a, np.zeros(24 - timeMax)), 0, np.zeros(timeMin)) for a in appliance_schedule]
+    print(appliance_schedule)
+    l = []
+    if timeMax > timeMin:
+        l = [np.insert(np.append(a, np.zeros(24 - timeMax)), 0,
+            np.zeros(timeMin)) for a in appliance_schedule]
+    else:
+        for a in appliance_schedule:
+             l.append(np.concatenate((a[(24-timeMin):],
+                np.zeros(timeMin-timeMax), a[:(24 - timeMin)])))
+    return l
+
+
+def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
+    hours = 24
+    A_ub = np.zeros([hours, hours])
+    a_eq = np.zeros(hours)
+    b_eq = appliance.dailyUsageMax
+    if appliance.timeMax > appliance.timeMin:
+        for i in range(appliance.timeMin, appliance.timeMax):
+            A_ub[i][i] = 1
+            a_eq[i] = 1
+    else:
+        for i in range(appliance.timeMin, 24):
+            A_ub[i][i] = 1
+            a_eq[i] = 1
+        for i in range(0, appliance.timeMax):
+            a_eq[i] = 1
+    for i in range(len(b_ub)):
+        b_ub[i] = appliance.maxHourConsumption
+    A_eq = np.array([a_eq])
+    res = linprog(hourly_prices, A_ub, b_ub, np.array(A_eq), b_eq)
+    prices = np.multiply(hourly_prices, schedule)
+    # print(res)
+    # print(prices)
+    # print(np.sum(prices))
+    return np.sum(prices), schedule
 
 
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
@@ -102,27 +137,30 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
             appliance, hourly_prices)
 
     price_schedule, tmp_app_schedule = min_sorted_schedule(price_schedule,
-            appliance_schedule, appliance.timeMin)
+            tmp_app_schedule, appliance.timeMin)
 
     appliance_schedule = format_24h_appliance_schedule(tmp_app_schedule,
             appliance.timeMin, appliance.timeMax)
 
-    return price_schedule, appliance_schedule
+    return price_schedule, appliance_schedule b_ub = np.zeros(hours) A_ub[i][i] = 1 schedule = np.round_(res.x, decimals=2) # print(np.sum(prices))
 
 
 # # Or define them yourself so you can clearly see whats going on
-# hourly_prices = [0.1, 0.1,
-#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
-#
-# # Create an appliance object
-# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=1, timeMax=8)
-#
-# # Make the magic happen
-# price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
-#         ev, hourly_prices)
-#
-# appliance_schedule = format_24h_appliance_schedule(appliance_schedule, ev.timeMin, ev.timeMax)
-#
-# print(price_schedule)
-# print(appliance_schedule)
+hourly_prices = [0.1, 0.1,
+        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+
+
+# Create an appliance object
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=21, timeMax=8)
+prices, optimal_schedule = schedule_non_continous_appliance(ev, hourly_prices)
+print(optimal_schedule)
+
+
+# Make the magic happen
+price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
+        ev, hourly_prices)
+print(price_schedule)
+print(appliance_schedule)
+
+
