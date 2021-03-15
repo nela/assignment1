@@ -43,6 +43,3 @@ res = linprog(pr, A_ub=A_ineq, b_ub=b_ineq, A_eq=A_eq, b_eq=b_eq, bounds=bounds)
 print(res)
 # ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=21, timeMax=8)
 
-
-
-

@@ -3,10 +3,96 @@ from scipy.optimize import linprog
 from objects import ElAppliance
 
 
+def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
+    hours = 24
+    A_ub = np.zeros([hours, hours])
+    a_eq = np.zeros(hours)
+    b_eq = appliance.dailyUsageMax
+    b_ub = np.zeros(hours)
+    if appliance.timeMax > appliance.timeMin:
+        for i in range(appliance.timeMin, appliance.timeMax):
+            A_ub[i][i] = 1
+            a_eq[i] = 1
+    else:
+        for i in range(appliance.timeMin, 24):
+            A_ub[i][i] = 1
+            a_eq[i] = 1
+        for i in range(0, appliance.timeMax):
+            a_eq[i] = 1
+    for i in range(len(b_ub)):
+        b_ub[i] = appliance.maxHourConsumption
+    A_eq = np.array([a_eq])
+    res = linprog(hourly_prices, A_ub, b_ub, np.array(A_eq), b_eq)
+    schedule = np.round_(res.x, decimals=2)
+    prices = np.multiply(hourly_prices, schedule)
+    return np.sum(prices), schedule
+
+
+# Create vectors and matrices that define equality constraints
+def create_eq_constraints(appliance: list, hours=24):
+    A_eq, b_eq = [], []
+    index = 0
+
+    for a in appliance:
+        a_eq = np.zeros(hours * len(appliance))
+
+        for i in range(index + a.timeMin, index + a.timeMax):
+            a_eq[i] = 1
+
+        index += hours
+
+        A_eq.append(a_eq)
+        b_eq.append(a.dailyUsageMax)
+
+    return A_eq, b_eq
+
+
+# Create vectors and matrices that define the inequality constraints
+def create_ub_constraints(appliances: list, hours=24):
+    A_ub, b_ub = [], []
+    index = 0
+
+    for a in appliances:
+        for h in range(hours):
+            a_ub = np.zeros(hours * len(appliances))
+
+            if h > a.timeMin and h < a.timeMax:
+                a_ub[index + h] = 1
+
+            A_ub.append(a_ub)
+            b_ub.append(a.maxHourConsumption)
+
+        index += hours
+
+    return A_ub, b_ub
+
+
+def schedule_multiple_non_continuous_appliances(appliances: list,
+        hourly_prices: list):
+    c = []
+    for i in range(len(appliances)):
+        c += hourly_prices
+
+    A_eq, b_eq = create_eq_constraints(appliances)
+    A_ub, b_ub = create_ub_constraints(appliances)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq)
+    x = np.round_(res.x, decimals=2)
+
+    return [x[i:(i+24)] for i in range(0, len(x), 24)]
+
 def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # Get the prices for the subset of the operational times for
     # the appliance. If timeMin > timeMax then the appliance can be
     # operation over 00.00
+
+    if (appliance.timeMax > 24):
+        raise ValueError("Appliance timeMax cannot be greater than 24.")
+    elif(appliance.timeMax == 0):
+        raise ValueError("Appliance timeMax cannot be 0. If you mean midnight \
+                input 24 instead. ")
+    elif(appliance.timeMin > 23):
+        raise ValueError("Appliance timeMin cannot be grater than 23. If you \
+                mean midnight put 0 instead.")
 
     if appliance.timeMin > appliance.timeMax:
         double_tmp = np.append(hourly_prices, hourly_prices)
@@ -16,6 +102,7 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
         hourly_prices_subset = np.array(hourly_prices[appliance.timeMin:
             appliance.timeMax])
 
+    print(len(hourly_prices_subset))
     return hourly_prices_subset
 
 
@@ -94,7 +181,6 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
 
 
 def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
-    print(appliance_schedule)
     l = []
     if timeMax > timeMin:
         l = [np.insert(np.append(a, np.zeros(24 - timeMax)), 0,
@@ -104,34 +190,6 @@ def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
              l.append(np.concatenate((a[(24-timeMin):],
                 np.zeros(timeMin-timeMax), a[:(24 - timeMin)])))
     return l
-
-
-def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
-    hours = 24
-    A_ub = np.zeros([hours, hours])
-    a_eq = np.zeros(hours)
-    b_eq = appliance.dailyUsageMax
-    b_ub = np.zeros(hours)
-    if appliance.timeMax > appliance.timeMin:
-        for i in range(appliance.timeMin, appliance.timeMax):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-    else:
-        for i in range(appliance.timeMin, 24):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-        for i in range(0, appliance.timeMax):
-            a_eq[i] = 1
-    for i in range(len(b_ub)):
-        b_ub[i] = appliance.maxHourConsumption
-    A_eq = np.array([a_eq])
-    res = linprog(hourly_prices, A_ub, b_ub, np.array(A_eq), b_eq)
-    schedule = np.round_(res.x, decimals=2)
-    prices = np.multiply(hourly_prices, schedule)
-    # print(res)
-    # print(prices)
-    # print(np.sum(prices))
-    return np.sum(prices), schedule
 
 
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
@@ -146,20 +204,21 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
 
     return price_schedule, appliance_schedule
 
-# # Or define them yourself so you can clearly see whats going on
-# hourly_prices = [0.1, 0.1,
-#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
-#
-#
-# # Create an appliance object
-# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=21, timeMax=8)
+
+# Or define them yourself so you can clearly see whats going on
+hourly_prices = [0.1, 0.1,
+        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+
+
+# Create an appliance object
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=0, timeMax=23)
 # prices, optimal_schedule = schedule_non_continous_appliance(ev, hourly_prices)
 # print(optimal_schedule)
-#
-#
-# # Make the magic happen
-# price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
-#         ev, hourly_prices)
-# print(price_schedule)
-# print(appliance_schedule)
+
+
+# Make the magic happen
+price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
+        ev, hourly_prices)
+print(price_schedule)
+print(appliance_schedule)
