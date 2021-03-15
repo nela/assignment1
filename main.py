@@ -24,13 +24,18 @@ if __name__ == "__main__":
     #for x in range(len(myNeighborhood.houses)):
     #    myNeighborhood.printInfo(x)
 
-    myNeighborhood.updateTimetable("RTP")
+    #myNeighborhood.updateTimetable("RTP")
     #for x in range(len(myNeighborhood.dailyPowerTimetable)):
     #    print(myNeighborhood.dailyPowerTimetable[x])
 
     #for x in range(len(myNeighborhood.houses)):
     #    myNeighborhood.printInfo(x)
-
-    myNeighborhood.testUseElAppliancesSolo("test")
+    print(len(myNeighborhood.dailyPowerTimetable))
+    #for x in myNeighborhood.dailyPowerTimetable:
+        #print(x)
+    test_list = myNeighborhood.testUseElAppliancesSolo("test")
+    for x in test_list:
+        print(x)
+    #myNeighborhood.testUseElAppliancesSolo("test")
     #print(myNeighborhood.getHouse("test").name)
     #print(myNeighborhood.getHouse("testt") is None)

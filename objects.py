@@ -80,8 +80,12 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
 
 
 def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
+    #for x in hourly_prices:
+        #print(">>",x)
     hourly_prices_subset = get_hourly_prices_subset(appliance, hourly_prices)
+    print(">>len(hourly_prices_subset):", len(hourly_prices_subset))
     hours = len(hourly_prices_subset)
+    print(">>hours - appliance.duration : ",hours - appliance.duration)
     num_possible_starting_hours = hours - appliance.duration
 
     # Lists in which to store equality and inequality matrices for each
@@ -91,6 +95,7 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     MA_eq = []
 
     # These loops populate the matrices with 0 and 1 for linear optimization
+    print("num_possible_starting_hours + 1 :",num_possible_starting_hours + 1)
     for i in range(num_possible_starting_hours + 1):
         ub = np.zeros([hours, hours])
         eq = np.zeros(hours)
@@ -110,6 +115,7 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     # Array that stores the total price for each hour
     price_schedule = []
     appliance_schedule = []
+    print("len(MA_eq) : ",len(MA_eq))
     for i in range(len(MA_eq)):
         # Extract the matrix for each hour
         A_eq = MA_eq[i]
@@ -140,7 +146,7 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
         price_hour_tmp.append((price_schedule[i], i+offset))
 
     price_hour_min_sorted = sorted(price_hour_tmp, key=lambda x: (x[0], x[1]))
-
+    print(">>> len(appliance_schedule): ",len(appliance_schedule))
     appliance_schedule_min_sorted = np.zeros(
             [len(price_hour_min_sorted),len(appliance_schedule[0])])
 
@@ -154,7 +160,7 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
 
 
 def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
-    print(appliance_schedule)
+    #print(appliance_schedule)
     l = []
     if timeMax > timeMin:
         l = [np.insert(np.append(a, np.zeros(24 - timeMax)), 0,
@@ -195,9 +201,11 @@ def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
 
 
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
+    #for x in hourly_prices:
+    #    print(">",x)
     price_schedule, tmp_app_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
-
+    print("hei 1: ", len(tmp_app_schedule))
     price_schedule, tmp_app_schedule = min_sorted_schedule(price_schedule,
             tmp_app_schedule, appliance.timeMin)
 
@@ -207,7 +215,7 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     return price_schedule, appliance_schedule
 
 class Neighborhood:
-    dailyPowerTimetable =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    dailyPowerTimetable =[]
     houses =[]
 
     def updateTimetable(self,type):
@@ -286,7 +294,7 @@ class Neighborhood:
                         picked_opt = tel
                 for i in range(24):
                     timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
-
+        return timeSchedule
 
 
     def printInfo(self,houseNumber):
