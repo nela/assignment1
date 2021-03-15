@@ -113,7 +113,7 @@ class Neighborhood:
             price_schedule, appliance_schedule = get_price_schedule_pr_appliance(temp_el,dailyPowerTimetable)
             #first element
             if first == True:
-                for x in range(24)
+                for x in range(24):
                     timeSchedule[x] = appliance_schedule[0][x]
                 first =False
             else:
@@ -133,13 +133,15 @@ class Neighborhood:
                             find_pos.append(z)
                     for pos in find_pos:
                         temp_load = temp_load + timeSchedule[pos]
+                    current_load_on_timeslots.append(temp_load)
                 picked_opt = 0
                 low = 100000000000000000000
                 for tel in range(len(current_load_on_timeslots)):
                     if current_load_on_timeslots[tel] < low:
-                        low = current_load
+                        low = current_load_on_timeslots[tel]
                         picked_opt = tel
-                    
+                for i in range(24):
+                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
 
 
 
