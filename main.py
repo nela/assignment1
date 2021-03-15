@@ -6,9 +6,9 @@ if __name__ == "__main__":
     myNeighborhood = Neighborhood("Blindern","ToU")
 
     myHouse = Household("test")
-    myHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,1, 0, 23))
-    myHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,2, 0, 23))
-    myHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 1,1, 0, 23))
+    myHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 0, 23))
+    myHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 23))
+    myHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 1,ElType.shiftable, 0, 23))
 
     myNeighborhood.houses.append(myHouse)
 

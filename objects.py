@@ -1,6 +1,14 @@
 import random
-#from generate_rt_prices import daily_price
-#from price_scheduling import get_price_schedule_pr_appliance
+from generate_rt_prices import daily_price
+from price_scheduling import get_price_schedule_pr_appliance
+import enum
+
+# creating enumerations using class
+class ElType(enum.Enum):
+    shiftable = 1
+    shiftable_non_continious =2
+    non_shiftable_non_continious = 3
+    non_shiftable = 4
 
 class ElAppliance:
     #type : 1 = shiftable, 2 = non-shiftable non-continious, 3 = non-shiftable
@@ -48,7 +56,7 @@ class Household:
         elDuration = [1,4,3,10,24,24,3,5,6,24,3,24]     #2.5 changed to 3
         elTimeMin = [0,0,0,9,0,0,0,0,0,0,0,0]
         elTimeMax = [23,23,23,19,23,23,23,23,23,23,23,23]
-        elType = [1,1,1,3,3,3,2,2,2,3,2,3]
+        elType = [ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable]
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
             self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
@@ -94,29 +102,44 @@ class Neighborhood:
         for i in range(4):
             find_type_target = 4-i
             for appliance in houseForSchedule.elAppliance:
-                if appliance.elType == find_type_target:
+                if appliance.elType.value == find_type_target:
                     priorityList.append(appliance)
 
         first = True
         for temp_el in priorityList:
-            print(temp_el.name," : ",temp_el.elType)
+            print(temp_el.name," : ",temp_el.elType.value)
 
-            ##kall på optimalisering
-            #price_schedule, appliance_schedule = get_price_schedule_pr_appliance(temp_el,dailyPowerTimetable)
-            ##first element
-            #if first == True:
-            #    for x in range(24)
-            #        timeSchedule[x] = appliance_schedule[x]
-            #    first =False
-            #else:
-            #    #find all with lowest cost
-            #    current_lowest_value = price_schedule[0]
-            #    same_value_number = 0
-            #    for x in range(len(price_schedule)):
-            #        if current_lowest_value == price_schedule[x]:
-            #            same_value_number = x
-            #    #choose best option TODO
-
+            #kall på optimalisering
+            price_schedule, appliance_schedule = get_price_schedule_pr_appliance(temp_el,dailyPowerTimetable)
+            #first element
+            if first == True:
+                for x in range(24)
+                    timeSchedule[x] = appliance_schedule[0][x]
+                first =False
+            else:
+                #find all with lowest cost
+                current_lowest_value = price_schedule[0]
+                same_value_number = 0
+                for x in range(len(price_schedule)):
+                    if current_lowest_value == price_schedule[x]:
+                        same_value_number = x
+                #choose best option
+                current_load_on_timeslots = []
+                for y in range(same_value_number):
+                    find_pos =[]
+                    temp_load = 0
+                    for z in range(24):
+                        if appliance_schedule[y][z] > 0:
+                            find_pos.append(z)
+                    for pos in find_pos:
+                        temp_load = temp_load + timeSchedule[pos]
+                picked_opt = 0
+                low = 100000000000000000000
+                for tel in range(len(current_load_on_timeslots)):
+                    if current_load_on_timeslots[tel] < low:
+                        low = current_load
+                        picked_opt = tel
+                    
 
 
 
