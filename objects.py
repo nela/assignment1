@@ -259,17 +259,17 @@ class Neighborhood:
 
         first = True
         for temp_el in priorityList:
-            print(temp_el.name," : ",temp_el.elType.value)
+            #print(temp_el.name," : ",temp_el.elType.value)
 
             #kall på optimalisering
-            print("temp_el")
-            print(temp_el.name)
-            print(temp_el.timeMin)
-            print(temp_el.timeMax)
-            print("Duration")
-            print(temp_el.duration)
-            print("Dailypowertimetable")
-            print(self.dailyPowerTimetable)
+            #print("temp_el")
+            #print(temp_el.name)
+            #print(temp_el.timeMin)
+            #print(temp_el.timeMax)
+            #print("Duration")
+            #print(temp_el.duration)
+            #print("Dailypowertimetable")
+            #print(self.dailyPowerTimetable)
             price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
             #first element
             if first == True:
