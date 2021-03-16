@@ -83,9 +83,9 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     #for x in hourly_prices:
         #print(">>",x)
     hourly_prices_subset = get_hourly_prices_subset(appliance, hourly_prices)
-    print(">>len(hourly_prices_subset):", len(hourly_prices_subset))
+    #print(">>len(hourly_prices_subset):", len(hourly_prices_subset))
     hours = len(hourly_prices_subset)
-    print(">>hours - appliance.duration : ",hours - appliance.duration)
+    #print(">>hours - appliance.duration : ",hours - appliance.duration)
     num_possible_starting_hours = hours - appliance.duration
 
     # Lists in which to store equality and inequality matrices for each
@@ -95,7 +95,7 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     MA_eq = []
 
     # These loops populate the matrices with 0 and 1 for linear optimization
-    print("num_possible_starting_hours + 1 :",num_possible_starting_hours + 1)
+    #print("num_possible_starting_hours + 1 :",num_possible_starting_hours + 1)
     for i in range(num_possible_starting_hours + 1):
         ub = np.zeros([hours, hours])
         eq = np.zeros(hours)
@@ -115,7 +115,7 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     # Array that stores the total price for each hour
     price_schedule = []
     appliance_schedule = []
-    print("len(MA_eq) : ",len(MA_eq))
+    #print("len(MA_eq) : ",len(MA_eq))
     for i in range(len(MA_eq)):
         # Extract the matrix for each hour
         A_eq = MA_eq[i]
@@ -146,7 +146,7 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
         price_hour_tmp.append((price_schedule[i], i+offset))
 
     price_hour_min_sorted = sorted(price_hour_tmp, key=lambda x: (x[0], x[1]))
-    print(">>> len(appliance_schedule): ",len(appliance_schedule))
+    #print(">>> len(appliance_schedule): ",len(appliance_schedule))
     appliance_schedule_min_sorted = np.zeros(
             [len(price_hour_min_sorted),len(appliance_schedule[0])])
 
@@ -205,7 +205,7 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     #    print(">",x)
     price_schedule, tmp_app_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
-    print("hei 1: ", len(tmp_app_schedule))
+    #print("hei 1: ", len(tmp_app_schedule))
     price_schedule, tmp_app_schedule = min_sorted_schedule(price_schedule,
             tmp_app_schedule, appliance.timeMin)
 
