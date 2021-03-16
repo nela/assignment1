@@ -53,10 +53,17 @@ def create_ub_constraints(house: Household, hours=24):
     A_ub, b_ub = [], []
     index = 0
 
+    for a: ElAppliance in house.elAppliance:
+        for h in range(hours):
+            a_ub = np.zeros(hours * len(house.elAppliance))
 
+            if h > appliance.timeMin and h < appliance.timeMax:
+                a_ub[index + h] = 1
+
+
+            A_ub.append(a_ub)
+        index += hours
     pass
-
-
 
 
 # Create vectors and matrices that define the inequality constraints

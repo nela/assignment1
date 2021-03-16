@@ -40,6 +40,7 @@ class ElAppliance:
 
 class Household:
     #constructor
+    elAppliance = []
     def __init__(self, name, appliances=None):
         #inizalise
         self.name = name
@@ -55,7 +56,7 @@ class Household:
         elMaxHourPower = [1.44,0.485,3.3,0.2,0.4,0.164,2,0.12,0.1,0.006,0.073,0.035]
         elDuration = [1,4,3,10,24,24,3,5,6,24,3,24]     #2.5 changed to 3
         elTimeMin = [0,0,0,9,0,0,0,0,0,0,0,0]
-        elTimeMax = [23,23,23,19,23,23,23,23,23,23,23,23]
+        elTimeMax = [24,24,24,20,24,24,24,24,24,24,24,24]
         elType = [ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable]
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
@@ -261,6 +262,14 @@ class Neighborhood:
             print(temp_el.name," : ",temp_el.elType.value)
 
             #kall på optimalisering
+            print("temp_el")
+            print(temp_el.name)
+            print(temp_el.timeMin)
+            print(temp_el.timeMax)
+            print("Duration")
+            print(temp_el.duration)
+            print("Dailypowertimetable")
+            print(self.dailyPowerTimetable)
             price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
             #first element
             if first == True:
