@@ -37,9 +37,8 @@ class ElAppliance:
             return self.timeMin
         return random.randint(self.timeMin, (self.timeMax-self.duration))
 
-class Household:
-    elAppliance = []
 
+class Household:
     #constructor
     def __init__(self, name, appliances=None):
         #inizalise

@@ -8,6 +8,12 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # the appliance. If timeMin > timeMax then the appliance can be
     # operation over 00.00
 
+    if (appliance.timeMax > 24):
+        raise ValueError("Appliance timeMax cannot be greater than 24.")
+    elif(appliance.timeMax == 0):
+        raise ValueError("Appliance timeMax cannot be 0. If you mean midnight \
+                input 24 instead. ")
+
     if appliance.timeMin > appliance.timeMax:
         double_tmp = np.append(hourly_prices, hourly_prices)
         hourly_prices_subset = double_tmp[appliance.timeMin:
@@ -16,6 +22,7 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
         hourly_prices_subset = np.array(hourly_prices[appliance.timeMin:
             appliance.timeMax])
 
+    print(len(hourly_prices_subset))
     return hourly_prices_subset
 
 
@@ -94,7 +101,6 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
 
 
 def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
-    print(appliance_schedule)
     l = []
     if timeMax > timeMin:
         l = [np.insert(np.append(a, np.zeros(24 - timeMax)), 0,
@@ -146,20 +152,20 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
 
     return price_schedule, appliance_schedule
 
-# # Or define them yourself so you can clearly see whats going on
-# hourly_prices = [0.1, 0.1,
-#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
-#
-#
-# # Create an appliance object
-# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=21, timeMax=8)
+# Or define them yourself so you can clearly see whats going on
+hourly_prices = [0.1, 0.1,
+        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+
+
+# Create an appliance object
+ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=0, timeMax=23)
 # prices, optimal_schedule = schedule_non_continous_appliance(ev, hourly_prices)
 # print(optimal_schedule)
-#
-#
-# # Make the magic happen
-# price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
-#         ev, hourly_prices)
-# print(price_schedule)
-# print(appliance_schedule)
+
+
+# Make the magic happen
+price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(
+        ev, hourly_prices)
+print(price_schedule)
+print(appliance_schedule)

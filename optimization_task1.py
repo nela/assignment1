@@ -31,6 +31,34 @@ def eq_constraints(house: Household, hours = 24):
     return A_eq, b_eq
 
 
+def create_eq_constraints(house: Household, hours=24):
+    A_eq, b_eq = [], []
+    index = 0
+
+    for a: ElAppliance in house.elAppliance:
+        a_eq = np.zeros(hours * len(house.elAppliance))
+
+        for i in range(index + a.timeMin, index + a.timeMax):
+            a_eq[i] = 1
+
+        index += hours
+
+        A_eq.append(a_eq)
+        b_eq.append(a.dailyUsageMax)
+
+    return A_eq, b_eq
+
+
+def create_ub_constraints(house: Household, hours=24):
+    A_ub, b_ub = [], []
+    index = 0
+
+
+    pass
+
+
+
+
 # Create vectors and matrices that define the inequality constraints
 def ub_constraints(house: Household, hours = 24):
     A_ub, b_ub = [], []
@@ -60,38 +88,52 @@ def ub_constraints(house: Household, hours = 24):
     return A_ub, b_ub
 
 
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=0, timeMax=8)
-lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4, timeMin=8, timeMax=17)
-dw = ElAppliance("Dishwasher", 1.44, 1.44, 1)
+# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=0, timeMax=8)
+# lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4, timeMin=8, timeMax=17)
+# dw = ElAppliance("Dishwasher", 1.44, 1.44, 1)
+#
+# house = Household("Mi Casa", [ev, lm, dw])
+#
+#
+#
+# prices = []
+# for i in range(24):
+#     prices.insert(i, 1) if 17 <= i <= 20 else prices.insert(i, 0.5)
+#
+# cost_function_price_vector = []
+# for i in range(len(house.elAppliance)):
+#     cost_function_price_vector += prices
+#
+# # print(len(prices))
+# # print(len(cost_function_price_vector))
+# # print(len(A_ub))
+# print(len(b_ub))
+# print(b_ub)
+# # print(len(A_eq))
+# # print(A_eq)
+# # print(len(b_eq))
+# # print(b_eq)
+# # print(A_eq)
+# # print(A_ub)
+# #
+# res = linprog(cost_function_price_vector,
+#         A_ub=A_ub, b_ub=b_ub,
+#         A_eq=A_eq, b_eq=b_eq)
+#
+# print(res)
 
-house = Household("Mi Casa", [ev, lm, dw])
+hourly_prices = [0.1, 0.1,
+        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
 
-A_eq, b_eq = eq_constraints(house)
-A_ub, b_ub = ub_constraints(house)
-
-
-prices = []
-for i in range(24):
-    prices.insert(i, 1) if 17 <= i <= 20 else prices.insert(i, 0.5)
+house = Household("mi CAsa")
+house.makeElappliances(6)
 
 cost_function_price_vector = []
 for i in range(len(house.elAppliance)):
     cost_function_price_vector += prices
 
-# print(len(prices))
-# print(len(cost_function_price_vector))
-# print(len(A_ub))
-print(len(b_ub))
-print(b_ub)
-# print(len(A_eq))
-# print(A_eq)
-# print(len(b_eq))
-# print(b_eq)
-# print(A_eq)
-# print(A_ub)
-#
-res = linprog(cost_function_price_vector,
-        A_ub=A_ub, b_ub=b_ub,
-        A_eq=A_eq, b_eq=b_eq)
+A_eq, b_eq = eq_constraints(house)
+A_ub, b_ub = ub_constraints(house)
 
-print(res)
+res = linprog()
