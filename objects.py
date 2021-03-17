@@ -25,7 +25,7 @@ class ElAppliance:
 
         #get a random time between min and max for dailyUsage variables.
     def randomTime(self):
-            return random.randint(self.timeMin, self.timeMax)
+            return random.randint(self.timeMin, self.timeMax-1)
 
     def randomUsage(self):
         if self.dailyUsageMin == self.dailyUsageMax:
@@ -35,7 +35,7 @@ class ElAppliance:
     def randomTimeDuration(self):
         if self.timeMin == self.timeMax:
             return self.timeMin
-        return random.randint(self.timeMin, (self.timeMax-self.duration))
+        return random.randint(self.timeMin, (self.timeMax-1-self.duration))
 
 
 class Household:
@@ -263,7 +263,7 @@ class Neighborhood:
 
             #kall på optimalisering
             #print("temp_el")
-            #print(temp_el.name)
+            print(temp_el.name)
             #print(temp_el.timeMin)
             #print(temp_el.timeMax)
             #print("Duration")
@@ -278,11 +278,13 @@ class Neighborhood:
                 first =False
             else:
                 #find all with lowest cost
-                current_lowest_value = price_schedule[0]
+                #for test_tel in range(len(price_schedule)):
+                #    print("price: ",price_schedule[test_tel][0])
+                current_lowest_value = price_schedule[0][0]
                 same_value_number = 0
                 for x in range(len(price_schedule)):
-                    if current_lowest_value == price_schedule[x]:
-                        same_value_number = x
+                    if current_lowest_value == price_schedule[x][0]:
+                        same_value_number = x+1
                 print("same_value_number : ",same_value_number)
                 #choose best option
                 current_load_on_timeslots = []
@@ -294,7 +296,7 @@ class Neighborhood:
                             find_pos.append(z)
                     for pos in find_pos:
                         temp_load = temp_load + timeSchedule[pos]
-                    print("temp_load : ",temp_load)
+                    #print("temp_load : ",temp_load)
                     current_load_on_timeslots.append(temp_load)
                 picked_opt = 0
                 low = 100000000000000000000
@@ -302,7 +304,8 @@ class Neighborhood:
                     if current_load_on_timeslots[tel] < low:
                         low = current_load_on_timeslots[tel]
                         picked_opt = tel
-                print("picked_opt : ",picked_opt)
+                print("low : ",low)
+                print("picked_opt : ",picked_opt+1)
                 for i in range(24):
                     timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
         return timeSchedule
