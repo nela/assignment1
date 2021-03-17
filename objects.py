@@ -283,6 +283,7 @@ class Neighborhood:
                 for x in range(len(price_schedule)):
                     if current_lowest_value == price_schedule[x]:
                         same_value_number = x
+                print("same_value_number : ",same_value_number)
                 #choose best option
                 current_load_on_timeslots = []
                 for y in range(same_value_number):
@@ -293,6 +294,7 @@ class Neighborhood:
                             find_pos.append(z)
                     for pos in find_pos:
                         temp_load = temp_load + timeSchedule[pos]
+                    print("temp_load : ",temp_load)
                     current_load_on_timeslots.append(temp_load)
                 picked_opt = 0
                 low = 100000000000000000000
@@ -300,6 +302,7 @@ class Neighborhood:
                     if current_load_on_timeslots[tel] < low:
                         low = current_load_on_timeslots[tel]
                         picked_opt = tel
+                print("picked_opt : ",picked_opt)
                 for i in range(24):
                     timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
         return timeSchedule
