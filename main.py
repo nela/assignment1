@@ -8,13 +8,13 @@ if __name__ == "__main__":
     #--#Task 1#--#
     print("\n\n#-----# Task 1 #-----#\n")
     #make house for Task 1:
-    myHouse = Household("Oppgave1")
-    myHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 8, 17))
-    myHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
-    myHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 4,ElType.shiftable, 8, 22))
+    task1House = Household("Oppgave1")
+    task1House.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 8, 17))
+    task1House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
+    task1House.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 4,ElType.shiftable, 8, 22))
 
-    myNeighborhood.houses.append(myHouse)
-
+    myNeighborhood.houses.append(task1House)
+    #run scheduling methode for Task 1 house
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave1")
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
@@ -26,7 +26,6 @@ if __name__ == "__main__":
     #make blueprint for house for Task 2,Task 3 and Task 4
     blueprintHouse =Household("Blueprint")
     blueprintHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 8, 17))
-    #blueprintHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
     blueprintHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 4,ElType.shiftable, 8, 22))
     blueprintHouse.elAppliance.append(ElAppliance("Cloth dryer",2.5,2.5,2.5,1,ElType.shiftable,18,22))
     blueprintHouse.elAppliance.append(ElAppliance("Lighting",1,2,0.2,10,ElType.non_shiftable,9,20))
@@ -36,12 +35,14 @@ if __name__ == "__main__":
     blueprintHouse.elAppliance.append(ElAppliance("TV",0.15,0.6,0.12,5,ElType.non_shiftable_non_continious,12,24))
     blueprintHouse.elAppliance.append(ElAppliance("Computer",0.6,0.6,0.1,6,ElType.non_shiftable_non_continious,8,24))
 
+    #make house for Task 2
     task2House = blueprintHouse
     task2House.name = "Oppgave2"
     task2House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
-    task2House.makeElappliancesAux(5)
-
+    task2House.makeElappliancesAux(5) #gives 5 random ElAppliances for the house
     myNeighborhood.houses.append(task2House)
+
+    #run scheduling for task2House
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
@@ -50,16 +51,16 @@ if __name__ == "__main__":
     print("\n\n#-----# Task 3 #-----#\n")
     #make neigbourhood for task 3
     task3Neighborhood = Neighborhood("Majorstua","RTP")
-
+    #fill Neighborhood with 30 houses
     for x in range(30):
         task3House = blueprintHouse
         task3House.name = str(x)
-        if ((x % 4) == 0):
+        if ((x % 4) == 0): #give some houses Electronic Vehicle
             task3House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
         task3House.makeElappliancesAux(5)
         task3Neighborhood.houses.append(task3House)
 
-    
+    #run scheduling methode for Neighborhood
     test_list = task3Neighborhood.testUseElAppliancesMulti()
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
