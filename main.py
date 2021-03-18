@@ -9,6 +9,7 @@ if __name__ == "__main__":
     myHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 0, 24))
     myHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 24))
     myHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 1,ElType.shiftable, 0, 24))
+    myHouse.elAppliance.append(ElAppliance("EV2", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 24))
 
     myNeighborhood.houses.append(myHouse)
 
@@ -32,9 +33,9 @@ if __name__ == "__main__":
     #    myNeighborhood.printInfo(x)
     #for x in myNeighborhood.dailyPowerTimetable:
         #print(x)
-    #test_list = myNeighborhood.testUseElAppliancesSolo("test1")
-    #for x in range(len(test_list)):
-    #    print("powerload hour ",x+1," : ",test_list[x])
+    test_list = myNeighborhood.testUseElAppliancesSolo("test1")
+    for x in range(len(test_list)):
+        print("powerload hour ",x+1," : ",test_list[x])
 
     test_list = myNeighborhood.testUseElAppliancesSoloNon("test1")
     for x in range(len(test_list)):

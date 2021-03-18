@@ -370,8 +370,9 @@ class Neighborhood:
 
         first = False
         non_appliance_schedule = schedule_multiple_non_continuous_appliances(priorityListNonCont,self.dailyPowerTimetable)
-        for x in range(24):
-            timeSchedule[x] = non_appliance_schedule[0][x]
+        for y in range(len(non_appliance_schedule)):
+            for x in range(24):
+                timeSchedule[x] = timeSchedule[x] + non_appliance_schedule[y][x]
 
         for temp_el in priorityListCont:
             #print(temp_el.name," : ",temp_el.elType.value)
@@ -381,7 +382,7 @@ class Neighborhood:
             #first element
             if first == True:
                 for x in range(24):
-                    timeSchedule[x] = appliance_schedule[0][x]
+                    timeSchedule[x] = timeSchedule[x] +appliance_schedule[0][x]
                 first =False
             else:
                 #find all with lowest cost
