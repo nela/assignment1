@@ -1,4 +1,5 @@
 import random
+<<<<<<< Updated upstream
 from generate_rt_prices import daily_price
 import numpy as np
 from scipy.optimize import linprog
@@ -22,6 +23,7 @@ class ElAppliance:
         self.timeMax = timeMax
         self.maxHourConsumption = maxHourConsumption
         self.elType = elType
+
 
         #get a random time between min and max for dailyUsage variables.
     def randomTime(self):
@@ -218,14 +220,14 @@ class Neighborhood:
     dailyPowerTimetable =[]
     houses =[]
 
-    def updateTimetable(self,type):
-        if type == "ToU":
+    def updateTimetable(self,el_type):
+        if el_type == "ToU":
             for x in range(24):
                 if ((x >= 17) and (x <=20)):
                     self.dailyPowerTimetable.insert(x, 1)
                 else:
                     self.dailyPowerTimetable.insert(x, 0.5)
-        if type == "RTP":
+        if el_type == "RTP":
             self.dailyPowerTimetable = daily_price(0.5,1)
 
 
