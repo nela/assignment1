@@ -85,15 +85,6 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # the appliance. If timeMin > timeMax then the appliance can be
     # operation over 00.00
 
-    if (appliance.timeMax > 24):
-        raise ValueError("Appliance timeMax cannot be greater than 24.")
-    elif(appliance.timeMax == 0):
-        raise ValueError("Appliance timeMax cannot be 0. If you mean midnight \
-                input 24 instead. ")
-    elif(appliance.timeMin > 23):
-        raise ValueError("Appliance timeMin cannot be grater than 23. If you \
-                mean midnight put 0 instead.")
-
     if appliance.timeMin > appliance.timeMax:
         double_tmp = np.append(hourly_prices, hourly_prices)
         hourly_prices_subset = double_tmp[appliance.timeMin:
@@ -193,6 +184,21 @@ def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
 
 
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
+    if (appliance.timeMax > 24):
+        raise ValueError("Appliance timeMax cannot be greater than 24.")
+    elif(appliance.timeMax == 0):
+        raise ValueError("Appliance timeMax cannot be 0. If you mean midnight \
+                input 24 instead. ")
+    elif(appliance.timeMin > 23):
+        raise ValueError("Appliance timeMin cannot be grater than 23. If you \
+                mean midnight put 0 instead.")
+    elif((appliance.timeMax - appliance.timeMin) == 1):
+        raise ValueError("If you know the scheduling hour, don't use linprog")
+    elif(duration  == (appliance.timeMax-appliance.timeMin))
+        raise ValueError("If you know the scheduling hour, don't use linprog")
+    elif(duration > (appliance.timeMax-appliance.timeMin))
+        raise ValueError("Appliance duration cannot be larger than the operational time")
+
     price_schedule, tmp_app_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
 
@@ -212,7 +218,7 @@ hourly_prices = [0.1, 0.1,
 
 
 # Create an appliance object
-ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3.3, 3, 1, timeMin=0, timeMax=23)
+ev = ElAppliance("Electric Vehicle", 3.3, 3.3, 3.3, 3, 1, timeMin=0, timeMax=1)
 # prices, optimal_schedule = schedule_non_continous_appliance(ev, hourly_prices)
 # print(optimal_schedule)
 
