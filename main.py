@@ -32,13 +32,17 @@ if __name__ == "__main__":
     #    myNeighborhood.printInfo(x)
     #for x in myNeighborhood.dailyPowerTimetable:
         #print(x)
-    test_list = myNeighborhood.testUseElAppliancesSolo("test1")
+    #test_list = myNeighborhood.testUseElAppliancesSolo("test1")
+    #for x in range(len(test_list)):
+    #    print("powerload hour ",x+1," : ",test_list[x])
+
+    test_list = myNeighborhood.testUseElAppliancesSoloNon("test1")
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
 
-    test_list = myNeighborhood.testUseElAppliancesMulti()
-    for x in range(len(test_list)):
-        print("powerload hour ",x+1," : ",test_list[x])
+    #test_list = myNeighborhood.testUseElAppliancesMulti()
+    #for x in range(len(test_list)):
+    #    print("powerload hour ",x+1," : ",test_list[x])
     #myNeighborhood.testUseElAppliancesSolo("test")
     #print(myNeighborhood.getHouse("test").name)
     #print(myNeighborhood.getHouse("testt") is None)
