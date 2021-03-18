@@ -46,21 +46,20 @@ if __name__ == "__main__":
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
 
-    #for x in range(len(myNeighborhood.dailyPowerTimetable)):
-    #    print("daily price hour ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+    #--#Task 3#--#
+    print("\n\n#-----# Task 3 #-----#\n")
+    #make neigbourhood for task 3
+    task3Neighborhood = Neighborhood("Majorstua","RTP")
 
-    #for x in range(len(myNeighborhood.houses)):
-    #    myNeighborhood.printInfo(x)
-    #for x in myNeighborhood.dailyPowerTimetable:
-        #print(x)
+    for x in range(30):
+        task3House = blueprintHouse
+        task3House.name = str(x)
+        if ((x % 4) == 0):
+            task3House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
+        task3House.makeElappliancesAux(5)
+        task3Neighborhood.houses.append(task3House)
 
-    #test_list = myNeighborhood.testUseElAppliancesSoloNon("Oppgave1")
-    #for x in range(len(test_list)):
-    #    print("powerload hour ",x+1," : ",test_list[x])
-
-    #test_list = myNeighborhood.testUseElAppliancesMulti()
-    #for x in range(len(test_list)):
-    #    print("powerload hour ",x+1," : ",test_list[x])
-    #myNeighborhood.testUseElAppliancesSolo("test")
-    #print(myNeighborhood.getHouse("test").name)
-    #print(myNeighborhood.getHouse("testt") is None)
+    
+    test_list = task3Neighborhood.testUseElAppliancesMulti()
+    for x in range(len(test_list)):
+        print("powerload hour ",x+1," : ",test_list[x])
