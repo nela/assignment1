@@ -48,7 +48,7 @@ class Household:
             for a in appliances:
                 self.elAppliance.append(a)
 
-
+    #can be deleted: just in case new methode breaks or we want the old values
     def makeElappliances(self,number):
         elNames = ["Dishwasher","Laundry machine","Electric vehicle","Lighting","Heating", "Refrigerator-freezer","Electric stove","TV","Computer","Router","Ceiling fan", "Separate Freezer"]
         elPowerMin = [1.44,1.94,9.9,1,6.4,1.32,3.9,0.15,0.6,0.14,0.22,0.84]
@@ -61,6 +61,21 @@ class Household:
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
             self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
+
+    #improved methode of makeElappliances for task 2,3 and 4 house
+    def makeElappliancesAux(self,number):
+        elNames = ["Electric vehicle","TV","Computer","Router","Ceiling fan", "Separate Freezer","Hair dryer","Toaster","Microwave","Cellphone charger","Cloth iron"]
+        elPowerMin = [9.9,0.15,0.6,0.14,0.22,0.84,0.19,0.30,0.6,0.01,0.28]
+        elPowerMax = [9.9,0.6,0.6,0.14,0.22,0.84,0.19,0.30,0.6,0.01,0.28]
+        elMaxHourPower = [3.3,0.12,0.1,0.006,0.073,0.035,0.19,0.30,0.6,0.003,0.28]
+        elDuration = [3,5,6,24,3,24,1,1,1,3,1]
+        elTimeMin = [0,12,8,0,11,0,8,8,16,0,19]
+        elTimeMax = [24,24,24,24,18,24,21,12,19,8,21]
+        elType = [ElType.shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable_non_continious,ElType.shiftable]
+        for x in range(number):
+            pick = random.randint(0, (len(elNames)-1))
+            self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
+
 
 def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
     hours = 24
@@ -291,115 +306,118 @@ class Neighborhood:
                 return self.houses[x]
         return None
 
+    #help methode for testUseElAppliancesSoloNon and testUseElAppliancesMultiNon
+    #it does all the handeling for appilances of ElType 2 and 3
+    def do_Non_Continious(self,timeSchedule, priorityListNonCont):
+        temp_schedule = timeSchedule
+        non_appliance_schedule = schedule_multiple_non_continuous_appliances(priorityListNonCont,self.dailyPowerTimetable)
+        for y in range(len(non_appliance_schedule)):
+            for x in range(24):
+                temp_schedule[x] = temp_schedule[x] + non_appliance_schedule[y][x]
+        return temp_schedule
+
+    #help methode for testUseElAppliancesSoloNon and testUseElAppliancesMultiNon
+    #it does all the handeling for appilances of ElType 1 and 4
+    def do_Continious(self,timeSchedule,elAppliance):
+        temp_schedule = timeSchedule
+        #kall på optimalisering
+        price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(elAppliance,self.dailyPowerTimetable)
+        #find all with lowest cost
+        current_lowest_value = price_schedule[0][0]
+        same_value_number = 0
+        for x in range(len(price_schedule)):
+            if current_lowest_value == price_schedule[x][0]:
+                same_value_number = x+1
+        #choose best option
+        current_load_on_timeslots = []
+        for y in range(same_value_number):
+            find_pos =[]
+            temp_load = 0
+            for z in range(24):
+                if appliance_schedule[y][z] > 0:
+                    find_pos.append(z)
+            for pos in find_pos:
+                temp_load = temp_load + temp_schedule[pos]
+            current_load_on_timeslots.append(temp_load)
+        picked_opt = 0
+        low = 100000000000000000000
+        for tel in range(len(current_load_on_timeslots)):
+            if current_load_on_timeslots[tel] < low:
+                low = current_load_on_timeslots[tel]
+                picked_opt = tel
+        for i in range(24):
+            temp_schedule[i] = temp_schedule[i] + appliance_schedule[picked_opt][i]
+        return temp_schedule
+
     #methode that plan usage of machines for one household
-    def testUseElAppliancesSoloNon(self,houseName):
+    def testUseElAppliancesSolo(self,houseName):
         timeSchedule = []
         for x in range(24):
             timeSchedule.append(0)
 
         houseForSchedule = self.getHouse(houseName)
+        if houseForSchedule is None:
+            print("No house with that Name : ",houseName)
+            return None
+
         priorityListCont = []
         priorityListNonCont = []
+
+        #for loop to sort so ElType with a higher value gets placed first in timeSchedule
         for i in range(4):
             find_type_target = 4-i
             for appliance in houseForSchedule.elAppliance:
                 if appliance.elType.value == find_type_target:
                     if appliance.elType.value == 2 or appliance.elType.value == 3:
+                        priorityListCont.append(appliance)
                         priorityListNonCont.append(appliance)
                     else:
                         priorityListCont.append(appliance)
 
-        first = False
-        non_appliance_schedule = schedule_multiple_non_continuous_appliances(priorityListNonCont,self.dailyPowerTimetable)
-        for y in range(len(non_appliance_schedule)):
-            for x in range(24):
-                timeSchedule[x] = timeSchedule[x] + non_appliance_schedule[y][x]
-
-        for temp_el in priorityListCont:
-            #kall på optimalisering
-            price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
-            #first element
-            if first == True:
+        #for loop through all elAppliances sorted in previous for loop with call on relevant optimization methode
+        for teller in range(len(priorityListCont)):
+            if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
+                temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
                 for x in range(24):
-                    timeSchedule[x] = timeSchedule[x] +appliance_schedule[0][x]
-                first =False
-            else:
-                #find all with lowest cost
-                current_lowest_value = price_schedule[0][0]
-                same_value_number = 0
-                for x in range(len(price_schedule)):
-                    if current_lowest_value == price_schedule[x][0]:
-                        same_value_number = x+1
-                #choose best option
-                current_load_on_timeslots = []
-                for y in range(same_value_number):
-                    find_pos =[]
-                    temp_load = 0
-                    for z in range(24):
-                        if appliance_schedule[y][z] > 0:
-                            find_pos.append(z)
-                    for pos in find_pos:
-                        temp_load = temp_load + timeSchedule[pos]
-                    current_load_on_timeslots.append(temp_load)
-                picked_opt = 0
-                low = 100000000000000000000
-                for tel in range(len(current_load_on_timeslots)):
-                    if current_load_on_timeslots[tel] < low:
-                        low = current_load_on_timeslots[tel]
-                        picked_opt = tel
-                for i in range(24):
-                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
+                    timeSchedule[x] = temp_schedule[x]
+            elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
+                temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
+                for x in range(24):
+                    timeSchedule[x] = temp_schedule[x]
+                teller +len(priorityListNonCont)
+
         return timeSchedule
 
+    #methode that plan usage of machines for one household
     def testUseElAppliancesMulti(self):
         timeSchedule = []
         for x in range(24):
             timeSchedule.append(0)
 
         priorityListCont = []
+        priorityListNonCont =[]
         for i in range(4):
             find_type_target = 4-i
             for temp_house in self.houses:
                 for appliance in temp_house.elAppliance:
                     if appliance.elType.value == find_type_target:
-                        priorityListCont.append(appliance)
+                        if appliance.elType.value == 2 or appliance.elType.value == 3:
+                            priorityListCont.append(appliance)
+                            priorityListNonCont.append(appliance)
+                        else:
+                            priorityListCont.append(appliance)
 
-        first = True
-        for temp_el in priorityListCont:
-            #kall på optimalisering
-            price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
-
-            #first element
-            if first == True:
+        for teller in range(len(priorityListCont)):
+            if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
+                temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
                 for x in range(24):
-                    timeSchedule[x] = appliance_schedule[0][x]
-                first =False
-            else:
-                #find all with lowest cost
-                current_lowest_value = price_schedule[0][0]
-                same_value_number = 0
-                for x in range(len(price_schedule)):
-                    if current_lowest_value == price_schedule[x][0]:
-                        same_value_number = x+1
-                #choose best option
-                current_load_on_timeslots = []
-                for y in range(same_value_number):
-                    find_pos =[]
-                    temp_load = 0
-                    for z in range(24):
-                        if appliance_schedule[y][z] > 0:
-                            find_pos.append(z)
-                    for pos in find_pos:
-                        temp_load = temp_load + timeSchedule[pos]
-                    current_load_on_timeslots.append(temp_load)
-                picked_opt = 0
-                low = 100000000000000000000
-                for tel in range(len(current_load_on_timeslots)):
-                    if current_load_on_timeslots[tel] < low:
-                        low = current_load_on_timeslots[tel]
-                        picked_opt = tel
-                for i in range(24):
-                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
+                    timeSchedule[x] = temp_schedule[x]
+            elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
+                temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
+                for x in range(24):
+                    timeSchedule[x] = temp_schedule[x]
+                teller +len(priorityListNonCont)
+
         return timeSchedule
 
 
