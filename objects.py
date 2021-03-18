@@ -161,7 +161,6 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
         hourly_prices_subset = np.array(hourly_prices[appliance.timeMin:
             appliance.timeMax])
 
-    print(len(hourly_prices_subset))
     return hourly_prices_subset
 
 
@@ -367,8 +366,6 @@ class Neighborhood:
 
         first = True
         for temp_el in priorityListCont:
-            #print(temp_el.name," : ",temp_el.elType.value)
-
             #kall på optimalisering
             price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
 
@@ -394,7 +391,6 @@ class Neighborhood:
                             find_pos.append(z)
                     for pos in find_pos:
                         temp_load = temp_load + timeSchedule[pos]
-                    #print("temp_load : ",temp_load)
                     current_load_on_timeslots.append(temp_load)
                 picked_opt = 0
                 low = 100000000000000000000

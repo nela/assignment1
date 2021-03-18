@@ -54,7 +54,7 @@ def daily_price(pr_min: float, pr_max: float):
     if add_mpost > 0:
         post_morning_post = [random.uniform(pr_min,
             pr_min + (pr_min * random.uniform(0.45, .67))) for i in range(add_mpost)]
-        print(post_morning_post)
+        #print(post_morning_post)
         prices = prices + post_morning_post
 
     prices = prices + evening_pre
@@ -65,7 +65,7 @@ def daily_price(pr_min: float, pr_max: float):
     if nightly_count > 0:
         nightly = [random.uniform(pr_min,
             pr_min + (pr_min * random.uniform(0.1, 0.25))) for i in range(nightly_count)]
-        print(nightly)
+        #print(nightly)
         prices = nightly + prices
 
     return prices
