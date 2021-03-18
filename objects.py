@@ -40,10 +40,10 @@ class ElAppliance:
 
 class Household:
     #constructor
-    elAppliance = []
     def __init__(self, name, appliances=None):
         #inizalise
         self.name = name
+        self.elAppliance = []
         if appliances is not None:
             for a in appliances:
                 self.elAppliance.append(a)
@@ -61,7 +61,6 @@ class Household:
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
             self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
-
 
 def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # Get the prices for the subset of the operational times for
@@ -199,6 +198,18 @@ def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
     # print(np.sum(prices))
     return np.sum(prices), schedule
 
+def schedule_multiple_non_continuous_appliances(appliances: list, hourly_prices: list):
+    c = []
+    for i in range(len(appliances)):
+        c += hourly_prices
+
+    A_eq, b_eq = create_eq_constraints(appliances)
+    A_ub, b_ub = create_ub_constraints(appliances)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq)
+    x = np.round_(res.x, decimals=2)
+
+    return [x[i:(i+24)] for i in range(0, len(x), 24)]
+
 
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     #for x in hourly_prices:
@@ -250,26 +261,82 @@ class Neighborhood:
             timeSchedule.append(0)
 
         houseForSchedule = self.getHouse(houseName)
-        priorityList = []
+        priorityListCont = []
         for i in range(4):
             find_type_target = 4-i
             for appliance in houseForSchedule.elAppliance:
                 if appliance.elType.value == find_type_target:
-                    priorityList.append(appliance)
+                    priorityListCont.append(appliance)
 
         first = True
-        for temp_el in priorityList:
+        for temp_el in priorityListCont:
+            print(temp_el.name," : ",temp_el.elType.value)
+
+            #kall på optimalisering
+            price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
+
+            #first element
+            if first == True:
+                for x in range(24):
+                    timeSchedule[x] = appliance_schedule[0][x]
+                first =False
+            else:
+                #find all with lowest cost
+                current_lowest_value = price_schedule[0][0]
+                same_value_number = 0
+                for x in range(len(price_schedule)):
+                    if current_lowest_value == price_schedule[x][0]:
+                        same_value_number = x+1
+                print("same_value_number : ",same_value_number)
+                #choose best option
+                current_load_on_timeslots = []
+                for y in range(same_value_number):
+                    find_pos =[]
+                    temp_load = 0
+                    for z in range(24):
+                        if appliance_schedule[y][z] > 0:
+                            find_pos.append(z)
+                    for pos in find_pos:
+                        temp_load = temp_load + timeSchedule[pos]
+                    #print("temp_load : ",temp_load)
+                    current_load_on_timeslots.append(temp_load)
+                picked_opt = 0
+                low = 100000000000000000000
+                for tel in range(len(current_load_on_timeslots)):
+                    if current_load_on_timeslots[tel] < low:
+                        low = current_load_on_timeslots[tel]
+                        picked_opt = tel
+                print("low : ",low)
+                print("picked_opt : ",picked_opt+1)
+                for i in range(24):
+                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
+        return timeSchedule
+
+    #methode that plan usage of machines for one household
+    def testUseElAppliancesSoloNon(self,houseName):
+        timeSchedule = []
+        for x in range(24):
+            timeSchedule.append(0)
+
+        houseForSchedule = self.getHouse(houseName)
+        priorityListCont = []
+        priorityListNonCont = []
+        for i in range(4):
+            find_type_target = 4-i
+            for appliance in houseForSchedule.elAppliance:
+                if appliance.elType.value == find_type_target:
+                    if appliance.elType.value == 2 or appliance.elType.value == 3:
+                        priorityListNonCont.append(appliance)
+                    else:
+                        priorityListCont.append(appliance)
+
+        first = True
+        for temp_el_non in priorityListNonCont:
+            pass
+        for temp_el in priorityListCont:
             #print(temp_el.name," : ",temp_el.elType.value)
 
             #kall på optimalisering
-            #print("temp_el")
-            print(temp_el.name)
-            #print(temp_el.timeMin)
-            #print(temp_el.timeMax)
-            #print("Duration")
-            #print(temp_el.duration)
-            #print("Dailypowertimetable")
-            #print(self.dailyPowerTimetable)
             price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
             #first element
             if first == True:
@@ -278,8 +345,63 @@ class Neighborhood:
                 first =False
             else:
                 #find all with lowest cost
-                #for test_tel in range(len(price_schedule)):
-                #    print("price: ",price_schedule[test_tel][0])
+                current_lowest_value = price_schedule[0][0]
+                same_value_number = 0
+                for x in range(len(price_schedule)):
+                    if current_lowest_value == price_schedule[x][0]:
+                        same_value_number = x+1
+                print("same_value_number : ",same_value_number)
+                #choose best option
+                current_load_on_timeslots = []
+                for y in range(same_value_number):
+                    find_pos =[]
+                    temp_load = 0
+                    for z in range(24):
+                        if appliance_schedule[y][z] > 0:
+                            find_pos.append(z)
+                    for pos in find_pos:
+                        temp_load = temp_load + timeSchedule[pos]
+                    #print("temp_load : ",temp_load)
+                    current_load_on_timeslots.append(temp_load)
+                picked_opt = 0
+                low = 100000000000000000000
+                for tel in range(len(current_load_on_timeslots)):
+                    if current_load_on_timeslots[tel] < low:
+                        low = current_load_on_timeslots[tel]
+                        picked_opt = tel
+                print("low : ",low)
+                print("picked_opt : ",picked_opt+1)
+                for i in range(24):
+                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
+        return timeSchedule
+
+    def testUseElAppliancesMulti(self):
+        timeSchedule = []
+        for x in range(24):
+            timeSchedule.append(0)
+
+        priorityListCont = []
+        for i in range(4):
+            find_type_target = 4-i
+            for temp_house in self.houses:
+                for appliance in temp_house.elAppliance:
+                    if appliance.elType.value == find_type_target:
+                        priorityListCont.append(appliance)
+
+        first = True
+        for temp_el in priorityListCont:
+            #print(temp_el.name," : ",temp_el.elType.value)
+
+            #kall på optimalisering
+            price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
+
+            #first element
+            if first == True:
+                for x in range(24):
+                    timeSchedule[x] = appliance_schedule[0][x]
+                first =False
+            else:
+                #find all with lowest cost
                 current_lowest_value = price_schedule[0][0]
                 same_value_number = 0
                 for x in range(len(price_schedule)):

@@ -12,14 +12,14 @@ if __name__ == "__main__":
 
     myNeighborhood.houses.append(myHouse)
 
-    for x in range(len(myNeighborhood.houses)):
-        myNeighborhood.printInfo(x)
+    #for x in range(len(myNeighborhood.houses)):
+    #    myNeighborhood.printInfo(x)
 
 
-    #testHouseRandom =Household("random")
-    #testHouseRandom.makeElappliances(5)
+    testHouseRandom = Household("random")
+    testHouseRandom.makeElappliances(5)
 
-    #myNeighborhood.houses.append(testHouseRandom)
+    myNeighborhood.houses.append(testHouseRandom)
 
     #for x in range(len(myNeighborhood.houses)):
     #    myNeighborhood.printInfo(x)
@@ -33,6 +33,10 @@ if __name__ == "__main__":
     #for x in myNeighborhood.dailyPowerTimetable:
         #print(x)
     test_list = myNeighborhood.testUseElAppliancesSolo("test1")
+    for x in range(len(test_list)):
+        print("powerload hour ",x+1," : ",test_list[x])
+
+    test_list = myNeighborhood.testUseElAppliancesMulti()
     for x in range(len(test_list)):
         print("powerload hour ",x+1," : ",test_list[x])
     #myNeighborhood.testUseElAppliancesSolo("test")
