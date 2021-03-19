@@ -320,7 +320,7 @@ class Neighborhood:
     #it does all the handeling for appilances of ElType 1 and 4
     def do_Continious(self,timeSchedule,elAppliance):
         temp_schedule = timeSchedule
-        
+
         #kall på optimalisering
         price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(elAppliance,self.dailyPowerTimetable)
         #find all with lowest cost
@@ -353,7 +353,6 @@ class Neighborhood:
     #methode that plan usage of machines for one household
     def testUseElAppliancesSolo(self,houseName):
         timeSchedule = []
-        print(">start>", timeSchedule)
         for x in range(24):
             timeSchedule.append(0)
 

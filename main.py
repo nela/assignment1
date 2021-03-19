@@ -51,7 +51,8 @@ if __name__ == "__main__":
     myNeighborhood.houses.append(task2House)
     for x in range(len(task2House.elAppliance)):
         print(">name : ", task2House.elAppliance[x].name," ElType : ",task2House.elAppliance[x].elType.value)
-
+    print("\n")
+    
     #run scheduling for task2House
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
