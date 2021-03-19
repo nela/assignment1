@@ -54,10 +54,15 @@ def schedule_multiple_non_continuous_appliances(appliances: list,
     if bounds is not None:
         pass
 
+    optimization_bounds = None
+    if bounds_strategy is not None:
+        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
+    if bounds is not None:
+        pass
+
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
-    cd = np.power(c, power)
-    res = linprog(cd , A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
     print(res)
     x = np.round_(res.x, decimals=2)
 
@@ -157,7 +162,7 @@ def updated_hours_continuous(appliances: list, hourly_prices):
         print(optimal_hour)
         optimal_hour = optimal_hour[1]
         substitutions.append(ElAppliance(a.name, a.dailyUsageMin, a.dailyUsageMax,
-            a.maxHourConsumption, a.duration, a.elType, optimal_hour, a.timeMax))
+            a.maxHourConsumption, a.duration, a.elType, optimal_hour, optimal_hour+a.duration))
 
     return substitutions
 
@@ -222,6 +227,7 @@ avg_load = get_total_house_load(house)/len(house.elAppliance)
 print(avg_load)
 
 df = get_house_load_schedule(house, hourly_prices)
+df = get_house_load_schedule(house, hourly_prices, bounds_strategy='static', bounds=4)
 print(df)
 
 # shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
