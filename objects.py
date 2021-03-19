@@ -320,6 +320,7 @@ class Neighborhood:
     #it does all the handeling for appilances of ElType 1 and 4
     def do_Continious(self,timeSchedule,elAppliance):
         temp_schedule = timeSchedule
+        
         #kall på optimalisering
         price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(elAppliance,self.dailyPowerTimetable)
         #find all with lowest cost
@@ -352,6 +353,7 @@ class Neighborhood:
     #methode that plan usage of machines for one household
     def testUseElAppliancesSolo(self,houseName):
         timeSchedule = []
+        print(">start>", timeSchedule)
         for x in range(24):
             timeSchedule.append(0)
 
@@ -364,12 +366,15 @@ class Neighborhood:
         priorityListNonCont = []
 
         #for loop to sort so ElType with a higher value gets placed first in timeSchedule
+        first = True
         for i in range(4):
             find_type_target = 4-i
             for appliance in houseForSchedule.elAppliance:
                 if appliance.elType.value == find_type_target:
                     if appliance.elType.value == 2 or appliance.elType.value == 3:
-                        priorityListCont.append(appliance)
+                        if first is True:
+                            priorityListCont.append(appliance)
+                            first = False
                         priorityListNonCont.append(appliance)
                     else:
                         priorityListCont.append(appliance)
@@ -378,13 +383,15 @@ class Neighborhood:
         for teller in range(len(priorityListCont)):
             if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
+                #print(">Con>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
             elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
+                #print(">NCon>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
-                teller +len(priorityListNonCont)
+                #teller = teller +len(priorityListNonCont)
 
         return timeSchedule
 
@@ -396,13 +403,16 @@ class Neighborhood:
 
         priorityListCont = []
         priorityListNonCont =[]
+        first = True
         for i in range(4):
             find_type_target = 4-i
             for temp_house in self.houses:
                 for appliance in temp_house.elAppliance:
                     if appliance.elType.value == find_type_target:
                         if appliance.elType.value == 2 or appliance.elType.value == 3:
-                            priorityListCont.append(appliance)
+                            if first is True:
+                                priorityListCont.append(appliance)
+                                first = False
                             priorityListNonCont.append(appliance)
                         else:
                             priorityListCont.append(appliance)

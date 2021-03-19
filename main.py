@@ -16,12 +16,12 @@ if __name__ == "__main__":
     myNeighborhood.houses.append(task1House)
     #print price
     for x in range(24):
-        print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+        print("Task1: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
     print("\n")
     #run scheduling methode for Task 1 house
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave1")
     for x in range(len(test_list)):
-        print("powerload hour ",x+1," : ",test_list[x])
+        print("Task1: Powerload hour ",x+1," : ",test_list[x])
 
     #--#Task 2#--#
     print("\n\n#-----# Task 2 #-----#\n")
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     myNeighborhood.updateTimetable("RTP")
     #print price
     for x in range(24):
-        print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+        print("Task2: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
     print("\n")
     #make blueprint for house for Task 2,Task 3 and Task 4
     blueprintHouse =Household("Blueprint")
@@ -49,11 +49,13 @@ if __name__ == "__main__":
     task2House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
     task2House.makeElappliancesAux(5) #gives 5 random ElAppliances for the house
     myNeighborhood.houses.append(task2House)
+    for x in range(len(task2House.elAppliance)):
+        print(">name : ", task2House.elAppliance[x].name," ElType : ",task2House.elAppliance[x].elType.value)
 
     #run scheduling for task2House
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
-        print("powerload hour ",x+1," : ",test_list[x])
+        print("Task2: Powerload hour ",x+1," : ",test_list[x])
 
     #--#Task 3#--#
     print("\n\n#-----# Task 3 #-----#\n")
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     task3Neighborhood = Neighborhood("Majorstua","RTP")
     #print price
     for x in range(24):
-        print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+        print("Task3: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
     print("\n")
     #fill Neighborhood with 30 houses
     for x in range(30):
@@ -73,6 +75,6 @@ if __name__ == "__main__":
         task3Neighborhood.houses.append(task3House)
 
     #run scheduling methode for Neighborhood
-    test_list = task3Neighborhood.testUseElAppliancesMulti()
-    for x in range(len(test_list)):
-        print("powerload hour ",x+1," : ",test_list[x])
+    #test_list = task3Neighborhood.testUseElAppliancesMulti()
+    #for x in range(len(test_list)):
+    #    print("Task3: Powerload hour ",x+1," : ",test_list[x])
