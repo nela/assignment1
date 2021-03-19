@@ -194,9 +194,9 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
                 mean midnight put 0 instead.")
     elif((appliance.timeMax - appliance.timeMin) == 1):
         raise ValueError("If you know the scheduling hour, don't use linprog")
-    elif(duration  == (appliance.timeMax-appliance.timeMin))
+    elif(duration  == (appliance.timeMax-appliance.timeMin)):
         raise ValueError("If you know the scheduling hour, don't use linprog")
-    elif(duration > (appliance.timeMax-appliance.timeMin))
+    elif(duration > (appliance.timeMax-appliance.timeMin)):
         raise ValueError("Appliance duration cannot be larger than the operational time")
 
     price_schedule, tmp_app_schedule = get_min_price_appliance_values(

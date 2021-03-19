@@ -1,5 +1,4 @@
 import random
-<<<<<<< Updated upstream
 from generate_rt_prices import daily_price
 import numpy as np
 from scipy.optimize import linprog

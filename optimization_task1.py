@@ -42,18 +42,38 @@ def create_ub_constraints(appliances: list, hours=24):
 
 
 def schedule_multiple_non_continuous_appliances(appliances: list,
-        hourly_prices: list):
+        hourly_prices: list, bounds_strategy=None, bounds=None) :
     c = []
     for i in range(len(appliances)):
         c += hourly_prices
 
+    optimization_bounds = None
+    if bounds_strategy is not None:
+        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
+    if bounds is not None:
+        pass
+
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
-    res = linprog(c, A_ub, b_ub, A_eq, b_eq)
-    # print(res)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
+    print(res)
     x = np.round_(res.x, decimals=2)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
+
+
+def create_optimization_bounds(bounds_strategy, bounds=None):
+    if bounds_strategy != 'static' and bounds_strategy != 'price_inverse':
+        raise ValueError("Bound strategy can be either \'static\' or \'price_inverse\'.")
+    elif bounds_strategy == 'static' and bounds is None:
+        raise ValueError("If you wish to run with static load bounds, \
+                please provide a bound threshold. {bound} variable cannot be empty.")
+
+    optimization_bounds = []
+    if bounds_strategy == 'static':
+        return [(0, bounds) for i in range(24)]
+    elif bounds_strategy == 'price_inverse':
+        pass
 
 
 def sort_appliances(appliances: list):
@@ -61,7 +81,6 @@ def sort_appliances(appliances: list):
     shiftable_non_continuous = []
     non_shiftable = []
     for appliance in house.elAppliance:
-        print(appliance.name)
         if appliance.elType == ElType.shiftable:
             shiftable_continuous.append(appliance)
         elif appliance.elType == ElType.shiftable_non_continious:
@@ -98,14 +117,14 @@ def schedule_shiftable_continuous(shiftable_continuous: list, hourly_prices: lis
     return names, schedule
 
 
-def schedule_shiftable_non_continuous(shiftable_non_continious: list, hourly_prices: list):
-    schedule = schedule_multiple_non_continuous_appliances(shiftable_non_continious, hourly_prices)
+def schedule_shiftable_non_continuous(shiftable_non_continious: list, hourly_prices: list, bounds_strategy=None, bounds=None):
+    schedule = schedule_multiple_non_continuous_appliances(shiftable_non_continious, hourly_prices, bounds_strategy, bounds)
     names = [a.name for a in shiftable_non_continious]
 
     return names, schedule
 
 
-def get_house_load_schedule(house: Household, hourly_prices: list):
+def get_house_load_schedule_depr(house: Household, hourly_prices: list):
     shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
 
     ns_names, ns_schedule = schedule_non_shiftable(non_shiftable)
@@ -118,23 +137,60 @@ def get_house_load_schedule(house: Household, hourly_prices: list):
     return DataFrame([list(x) for x in zip(*schedule)], columns=columns)
 
 
+def get_optimal_hours_for_continuous(appliance: ElAppliance, hourly_prices):
+    cost = []
+    for h in range(appliance.timeMin, appliance.timeMax):
+        cost.append((sum(hourly_prices[h:(h+appliance.duration)]), h))
+
+    sorted_cost = sorted(cost, key=lambda x: (x[0], x[1]))
+
+    return sorted_cost[0]
+
+
+def updated_hours_continuous(appliances: list, hourly_prices):
+    substitutions = []
+    for a in appliances:
+        print(a.name)
+        optimal_hour = get_optimal_hours_for_continuous(a, hourly_prices)
+        print(optimal_hour)
+        optimal_hour = optimal_hour[1]
+        substitutions.append(ElAppliance(a.name, a.dailyUsageMin, a.dailyUsageMax,
+            a.maxHourConsumption, a.duration, a.elType, optimal_hour, optimal_hour+a.duration))
+
+    return substitutions
+
+
+def get_house_load_schedule(house: Household, hourly_prices: list, bounds_strategy=None, bounds=None):
+    shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
+
+    updated_continuous = updated_hours_continuous(shiftable_continuous, hourly_prices)
+    optimizable = shiftable_non_continuous + updated_continuous
+
+    ns_names, ns_schedule = schedule_non_shiftable(non_shiftable)
+    snc_names, snc_schedule = schedule_shiftable_non_continuous(optimizable, hourly_prices, bounds_strategy, bounds)
+
+    columns = ns_names + snc_names
+    schedule = ns_schedule + snc_schedule
+
+    return DataFrame([list(x) for x in zip(*schedule)], columns=columns)
+
+
 def get_total_house_load(house):
     load = 0
-    for a in house.ElAppliance:
+    for a in house.elAppliance:
         load += a.dailyUsageMax
 
     return load
 
-
-# hourly_prices = [0.1, 0.1,
-#         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+hourly_prices = [0.1, 0.1,
+        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+lght = ElAppliance("Lighing", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20)
 #
 #
-# lght = ElAppliance("Lighing", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20)
-# heat = ElAppliance("Heating", 6.4, 9.6, 0.4, 24, ElType.non_shiftable, timeMin=0, timeMax=24)
+heat = ElAppliance("Heating", 6.4, 9.6, 0.4, 24, ElType.non_shiftable, timeMin=0, timeMax=24)
 # rfrg = ElAppliance("Refrigerator", 1.32, 3.96, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24)
-# stove = ElAppliance("Stove", 3.9, 3.9, 2, 3, ElType.shiftable, timeMin=14, timeMax=22)
+stove = ElAppliance("Stove", 3.9, 3.9, 2, 3, ElType.shiftable, timeMin=14, timeMax=22)
 # tv = ElAppliance("Tv", 0.15, 0.6, 0.12, 5, ElType.non_shiftable, timeMin=17, timeMax=22)
 # computer = ElAppliance("Computer", 0.6, 0.6, 0.1, 6, ElType.non_shiftable, timeMin=8, timeMax=24)
 # router = ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24)
@@ -143,19 +199,30 @@ def get_total_house_load(house):
 # dw = ElAppliance("Dishwaasher", 1.44, 1.44, 1.44, 1, ElType.shiftable_non_continious, timeMin=14, timeMax=24)
 # lm = ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 2, ElType.shiftable, timeMin=0, timeMax=18)
 # dryer = ElAppliance("Cloth Dryer", 2.5, 2.5, 2.5, 1, ElType.shiftable, timeMin=0, timeMax=20)
-# ev = ElAppliance("Electric batmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continious, timeMin=0, timeMax=8)
-# ev2 = ElAppliance("Electric bitchmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continious, timeMin=8, timeMax=24)
+ev = ElAppliance("Electric batmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable, timeMin=0, timeMax=8)
+ev2 = ElAppliance("Electric bitchmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continious, timeMin=8, timeMax=16)
 # iron = ElAppliance("Cloth Iron", 0.28, 0.28, 0.28, 1, ElType.shiftable, timeMin=10, timeMax=20)
 # cellcharger = ElAppliance("Cellphone charger", 0.01, 0.01, 0.003, 1, ElType.shiftable_non_continious, timeMin=0, timeMax=12)
 # mw = ElAppliance("Microwave", 0.6, 0.6, 0.6, 1, ElType.shiftable, timeMin=17, timeMax=24)
 # hd = ElAppliance("Hair Dryer", 0.19, 0.19, 0.19, 1, ElType.shiftable, timeMin=19, timeMax=23)
 # toaster = ElAppliance("Toaster", 0.3, 0.3, 0.3, 1, ElType.shiftable, timeMin=12, timeMax=20)
-#
-# appliances = [lght, heat, rfrg, stove, tv, computer, router, fan, freezer,
-#         dw, lm, dryer, ev, iron, cellcharger, mw, hd, toaster]
-#
-# appliances2 = [lght, heat, ev, stove, ev2]
-# house = Household("Mi Casa", appliances)
-# df = get_house_load_schedule(house, hourly_prices)
-# print(df)
 
+
+# appliances = [lght, heat, rfrg, stove, tv, computer, router, fan, freezer,
+#        dw, lm, dryer, ev, iron, cellcharger, mw, hd, toaster]
+
+
+appliances2 = [lght, heat, ev, stove, ev2]
+house = Household("Mi Casa", appliances2)
+
+load = get_total_house_load(house)
+avg_load = get_total_house_load(house)/len(house.elAppliance)
+print(avg_load)
+
+df = get_house_load_schedule(house, hourly_prices, bounds_strategy='static', bounds=4)
+print(df)
+
+# shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
+#
+# res = get_optimal_hours_for_continuous(ev, hourly_prices)
+# print(res)
