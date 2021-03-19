@@ -102,7 +102,6 @@ def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
     return np.sum(prices), schedule
 
 
-# Create vectors and matrices that define equality constraints
 def create_eq_constraints(appliance: list, hours=24):
     A_eq, b_eq = [], []
     index = 0
@@ -114,7 +113,6 @@ def create_eq_constraints(appliance: list, hours=24):
             a_eq[i] = 1
 
         index += hours
-
         A_eq.append(a_eq)
         b_eq.append(a.dailyUsageMax)
 
@@ -130,29 +128,57 @@ def create_ub_constraints(appliances: list, hours=24):
         for h in range(hours):
             a_ub = np.zeros(hours * len(appliances))
 
-            if h > a.timeMin and h < a.timeMax:
+            if h >= a.timeMin and h < a.timeMax:
                 a_ub[index + h] = 1
 
             A_ub.append(a_ub)
             b_ub.append(a.maxHourConsumption)
-
         index += hours
 
     return A_ub, b_ub
 
 
+def create_optimization_bounds(bounds_strategy, bounds=None):
+    if bounds_strategy != 'static' and bounds_strategy != 'price_inverse':
+        raise ValueError("Bound strategy can be either \'static\' or \'price_inverse\'.")
+    elif bounds_strategy == 'static' and bounds is None:
+        raise ValueError("If you wish to run with static load bounds, \
+                please provide a bound threshold. {bound} variable cannot be empty.")
+
+    optimization_bounds = []
+    if bounds_strategy == 'static':
+        return [(0, bounds) for i in range(24)]
+    elif bounds_strategy == 'price_inverse':
+        pass
+
+
 def schedule_multiple_non_continuous_appliances(appliances: list,
-        hourly_prices: list):
+        hourly_prices: list, bounds_strategy=None, bounds=None) :
     c = []
     for i in range(len(appliances)):
         c += hourly_prices
+    power = np.full(len(c), 0.33)
+
+    optimization_bounds = None
+    if bounds_strategy is not None:
+        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
+    if bounds is not None:
+        pass
+
+    optimization_bounds = None
+    if bounds_strategy is not None:
+        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
+    if bounds is not None:
+        pass
 
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
-    res = linprog(c, A_ub, b_ub, A_eq, b_eq)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
+    #print(res)
     x = np.round_(res.x, decimals=2)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
+
 
 def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # Get the prices for the subset of the operational times for
@@ -312,6 +338,7 @@ class Neighborhood:
         temp_schedule = timeSchedule
         non_appliance_schedule = schedule_multiple_non_continuous_appliances(priorityListNonCont,self.dailyPowerTimetable)
         for y in range(len(non_appliance_schedule)):
+            print("non_appliance_schedule",y," : ",non_appliance_schedule[y])
             for x in range(24):
                 temp_schedule[x] = temp_schedule[x] + non_appliance_schedule[y][x]
         return temp_schedule
@@ -415,17 +442,20 @@ class Neighborhood:
                             priorityListNonCont.append(appliance)
                         else:
                             priorityListCont.append(appliance)
-
+        #for x in range(len(priorityListCont)):
+        #    print("Appliance Type : ", priorityListCont[x].elType.value,"| Appliance Name : ",priorityListCont[x].name)
+        print(len(priorityListNonCont))
         for teller in range(len(priorityListCont)):
             if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
             elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
+                print(timeSchedule)
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
-                teller +len(priorityListNonCont)
+                print(timeSchedule)
 
         return timeSchedule
 
