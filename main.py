@@ -52,7 +52,7 @@ if __name__ == "__main__":
     for x in range(len(task2House.elAppliance)):
         print(">name : ", task2House.elAppliance[x].name," ElType : ",task2House.elAppliance[x].elType.value)
     print("\n")
-    
+
     #run scheduling for task2House
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
@@ -72,10 +72,10 @@ if __name__ == "__main__":
         task3House.name = str(x)
         if ((x % 4) == 0): #give some houses Electronic Vehicle
             task3House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
-        task3House.makeElappliancesAux(5)
+        #task3House.makeElappliancesAux(5)
         task3Neighborhood.houses.append(task3House)
 
     #run scheduling methode for Neighborhood
-    #test_list = task3Neighborhood.testUseElAppliancesMulti()
-    #for x in range(len(test_list)):
-    #    print("Task3: Powerload hour ",x+1," : ",test_list[x])
+    test_list = task3Neighborhood.testUseElAppliancesMulti()
+    for x in range(len(test_list)):
+        print("Task3: Powerload hour ",x+1," : ",test_list[x])
