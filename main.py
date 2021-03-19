@@ -17,6 +17,7 @@ if __name__ == "__main__":
     #print price
     for x in range(24):
         print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+    print("\n")
     #run scheduling methode for Task 1 house
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave1")
     for x in range(len(test_list)):
@@ -29,6 +30,7 @@ if __name__ == "__main__":
     #print price
     for x in range(24):
         print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+    print("\n")
     #make blueprint for house for Task 2,Task 3 and Task 4
     blueprintHouse =Household("Blueprint")
     blueprintHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 8, 17))
@@ -60,6 +62,7 @@ if __name__ == "__main__":
     #print price
     for x in range(24):
         print("Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+    print("\n")
     #fill Neighborhood with 30 houses
     for x in range(30):
         task3House = blueprintHouse
