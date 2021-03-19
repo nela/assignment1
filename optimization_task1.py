@@ -13,7 +13,7 @@ def create_eq_constraints(appliance: list, hours=24):
         a_eq = np.zeros(hours * len(appliance))
 
         for i in range(index + a.timeMin, index + a.timeMax):
-            a_eq[i] = 0.7
+            a_eq[i] = 1
 
         index += hours
         A_eq.append(a_eq)
@@ -32,7 +32,7 @@ def create_ub_constraints(appliances: list, hours=24):
             a_ub = np.zeros(hours * len(appliances))
 
             if h >= a.timeMin and h < a.timeMax:
-                a_ub[index + h] = 0.7
+                a_ub[index + h] = 1
 
             A_ub.append(a_ub)
             b_ub.append(a.maxHourConsumption)
@@ -42,45 +42,18 @@ def create_ub_constraints(appliances: list, hours=24):
 
 
 def schedule_multiple_non_continuous_appliances(appliances: list,
-        hourly_prices: list, bounds_strategy=None, bounds=None) :
+        hourly_prices: list) :
     c = []
     for i in range(len(appliances)):
         c += hourly_prices
-    power = np.full(len(c), 0.33)
-
-    optimization_bounds = None
-    if bounds_strategy is not None:
-        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
-    if bounds is not None:
-        pass
-
-    optimization_bounds = None
-    if bounds_strategy is not None:
-        optimization_bounds = create_optimization_bounds(bounds_strategy, bounds) * len(appliances)
-    if bounds is not None:
-        pass
 
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
-    res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
+    res = linprog(c, A_ub, b_ub, A_eq, b_eq)
     print(res)
     x = np.round_(res.x, decimals=2)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
-
-
-def create_optimization_bounds(bounds_strategy, bounds=None):
-    if bounds_strategy != 'static' and bounds_strategy != 'price_inverse':
-        raise ValueError("Bound strategy can be either \'static\' or \'price_inverse\'.")
-    elif bounds_strategy == 'static' and bounds is None:
-        raise ValueError("If you wish to run with static load bounds, \
-                please provide a bound threshold. {bound} variable cannot be empty.")
-
-    optimization_bounds = []
-    if bounds_strategy == 'static':
-        return [(0, bounds) for i in range(24)]
-    elif bounds_strategy == 'price_inverse':
-        pass
 
 
 def sort_appliances(appliances: list):
@@ -124,8 +97,8 @@ def schedule_shiftable_continuous(shiftable_continuous: list, hourly_prices: lis
     return names, schedule
 
 
-def schedule_shiftable_non_continuous(shiftable_non_continious: list, hourly_prices: list, bounds_strategy=None, bounds=None):
-    schedule = schedule_multiple_non_continuous_appliances(shiftable_non_continious, hourly_prices, bounds_strategy, bounds)
+def schedule_shiftable_non_continuous(shiftable_non_continious: list, hourly_prices: list):
+    schedule = schedule_multiple_non_continuous_appliances(shiftable_non_continious, hourly_prices)
     names = [a.name for a in shiftable_non_continious]
 
     return names, schedule
@@ -167,14 +140,14 @@ def updated_hours_continuous(appliances: list, hourly_prices):
     return substitutions
 
 
-def get_house_load_schedule(house: Household, hourly_prices: list, bounds_strategy=None, bounds=None):
+def get_house_load_schedule(house: Household, hourly_prices: list):
     shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
 
     updated_continuous = updated_hours_continuous(shiftable_continuous, hourly_prices)
     optimizable = shiftable_non_continuous + updated_continuous
 
     ns_names, ns_schedule = schedule_non_shiftable(non_shiftable)
-    snc_names, snc_schedule = schedule_shiftable_non_continuous(optimizable, hourly_prices, bounds_strategy, bounds)
+    snc_names, snc_schedule = schedule_shiftable_non_continuous(optimizable, hourly_prices)
 
     columns = ns_names + snc_names
     schedule = ns_schedule + snc_schedule
@@ -227,7 +200,6 @@ avg_load = get_total_house_load(house)/len(house.elAppliance)
 print(avg_load)
 
 df = get_house_load_schedule(house, hourly_prices)
-df = get_house_load_schedule(house, hourly_prices, bounds_strategy='static', bounds=4)
 print(df)
 
 # shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
