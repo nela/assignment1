@@ -13,7 +13,7 @@ def create_eq_constraints(appliance: list, hours=24):
         a_eq = np.zeros(hours * len(appliance))
 
         for i in range(index + a.timeMin, index + a.timeMax):
-            a_eq[i] = 1
+            a_eq[i] = 0.7
 
         index += hours
         A_eq.append(a_eq)
@@ -32,7 +32,7 @@ def create_ub_constraints(appliances: list, hours=24):
             a_ub = np.zeros(hours * len(appliances))
 
             if h >= a.timeMin and h < a.timeMax:
-                a_ub[index + h] = 1
+                a_ub[index + h] = 0.7
 
             A_ub.append(a_ub)
             b_ub.append(a.maxHourConsumption)
@@ -46,6 +46,7 @@ def schedule_multiple_non_continuous_appliances(appliances: list,
     c = []
     for i in range(len(appliances)):
         c += hourly_prices
+    power = np.full(len(c), 0.33)
 
     optimization_bounds = None
     if bounds_strategy is not None:
@@ -55,7 +56,8 @@ def schedule_multiple_non_continuous_appliances(appliances: list,
 
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
-    res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
+    cd = np.power(c, power)
+    res = linprog(cd , A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
     print(res)
     x = np.round_(res.x, decimals=2)
 
@@ -155,7 +157,7 @@ def updated_hours_continuous(appliances: list, hourly_prices):
         print(optimal_hour)
         optimal_hour = optimal_hour[1]
         substitutions.append(ElAppliance(a.name, a.dailyUsageMin, a.dailyUsageMax,
-            a.maxHourConsumption, a.duration, a.elType, optimal_hour, optimal_hour+a.duration))
+            a.maxHourConsumption, a.duration, a.elType, optimal_hour, a.timeMax))
 
     return substitutions
 
@@ -219,7 +221,7 @@ load = get_total_house_load(house)
 avg_load = get_total_house_load(house)/len(house.elAppliance)
 print(avg_load)
 
-df = get_house_load_schedule(house, hourly_prices, bounds_strategy='static', bounds=4)
+df = get_house_load_schedule(house, hourly_prices)
 print(df)
 
 # shiftable_continuous, shiftable_non_continuous, non_shiftable = sort_appliances(house.elAppliance)
