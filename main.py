@@ -1,4 +1,5 @@
 from objects import ElAppliance, Household, Neighborhood,ElType
+import optimization_task1 as opt
 import copy
 
 if __name__ == "__main__":
@@ -106,3 +107,7 @@ if __name__ == "__main__":
     for x in range(len(task4House.elAppliance)):
         print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task2House.elAppliance[x].name)
     print("\n")
+
+    df = opt.get_load_schedule(task4House, hourly_prices, task4=True, peak_load=3.7)
+
+    print(df)
