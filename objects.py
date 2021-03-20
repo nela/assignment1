@@ -41,9 +41,9 @@ class ElAppliance:
 
 class Household:
     #constructor
-    elAppliance = []
     def __init__(self, name, appliances=None):
         #inizalise
+        self.elAppliance = []
         self.name = name
         if appliances is not None:
             for a in appliances:
