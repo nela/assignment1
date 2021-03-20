@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 from format_appliance_lists import get_optimal_hours_for_continuous, sort_appliances, updated_hours_continuous
 from optimization import optimization_appliance_schedule
 
@@ -27,7 +29,6 @@ def get_neighbourhood_load_schedule(neighbourhood: list, hourly_prices):
     names, schedule = schedule_shiftable(optimizable, hourly_prices, task4=False,
             peak_load=None)
 
-    print(names)
     columns = pd.MultiIndex.from_tuples(names)
 
     return pd.DataFrame([list(x) for x in zip(*schedule)],
@@ -46,9 +47,6 @@ def get_load_schedule(appliances: list, hourly_prices: list, task4=False, peak_l
     shiftable = shiftable_non_continuous + updated_continuous
 
     names, schedule = None, None
-
-    print("shiftable ", len(shiftable))
-    print("nonshiftable", len(non_shiftable))
 
     if task4:
         names, schedule = schedule_shiftable(non_shiftable+shiftable,
@@ -92,3 +90,7 @@ def schedule_non_shiftable(non_shiftable: list, hour=24):
         names.append(a.name)
 
     return names, schedule
+
+
+def get_hourly_load(house: pd.DataFrame):
+    return pd.DataFrame(house.sum(axis=1), columns=['Hourly Load kWh'])
