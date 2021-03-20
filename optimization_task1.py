@@ -2,7 +2,8 @@ import copy
 import numpy as np
 import pandas as pd
 from scipy.optimize import linprog
-from objects import ElAppliance, Household, ElType
+# from objects import ElAppliance, Household, ElType
+from classes import ElAppliance, Household, ElType
 import price_scheduling as ps
 import random
 
@@ -58,7 +59,7 @@ def optimization_appliance_schedule(appliances: list,
         hourly_prices: list, task4=False, peak_load=None) :
     c = []
     for i in range(len(appliances)):
-        c += hourly_prices
+        c.extend(hourly_prices)
 
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances, task4=task4, peak_load=peak_load)
@@ -78,7 +79,7 @@ def sort_appliances(appliances: list):
     for a in appliances:
         if a.elType == ElType.shiftable:
             shiftable_continuous.append(a)
-        elif a.elType == ElType.shiftable_non_continious:
+        elif a.elType == ElType.shiftable_non_continuous:
             shiftable_non_continuous.append(a)
         elif a.elType == ElType.non_shiftable:
             non_shiftable.append(a)
@@ -152,6 +153,9 @@ def get_load_schedule(appliances: list, hourly_prices: list, task4=False, peak_l
 
     names, schedule = None, None
 
+    print("shiftable ", len(shiftable))
+    print("nonshiftable", len(non_shiftable))
+
     if task4:
         names, schedule = schedule_shiftable(non_shiftable+shiftable,
                 hourly_prices, task4=task4, peak_load=peak_load)
@@ -166,6 +170,7 @@ def get_load_schedule(appliances: list, hourly_prices: list, task4=False, peak_l
 
 
 def get_house_load_schedule(house, hourly_prices, task4=False, peak_load=None):
+    print(hourly_prices)
     names, schedule = get_load_schedule(house.elAppliance, hourly_prices,
             task4=task4, peak_load=peak_load)
 
@@ -260,8 +265,8 @@ def make_neighbourhood(num_houses: int):
     return neighbourhood
 
 
-hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+# hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
 
 
 def make_list():
@@ -304,16 +309,16 @@ def make_list():
 # print(total_hourly_load)
 
 # Task 3
-neighbourhood = make_neighbourhood(20)
-
-df = get_neighbourhood_load_schedule(neighbourhood, hourly_prices)
-
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
-
-print(df)
+# neighbourhood = make_neighbourhood(20)
+#
+# df = get_neighbourhood_load_schedule(neighbourhood, hourly_prices)
+#
+# pd.set_option('display.max_rows', None)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.width', None)
+# pd.set_option('display.max_colwidth', -1)
+#
+# print(df)
 # for h in neighbourhood:
 #     print(h.name)
 #     # for a in h.elAppliance:
