@@ -51,7 +51,6 @@ class Household:
                 self.elAppliance.append(a)
 
 
-<<<<<<< HEAD
     #improved methode of makeElappliances for task 2,3 and 4 house
     def makeElappliancesAux(self,number):
         elNames = ["Electric vehicle","TV","Computer","Router","Ceiling fan", "Separate Freezer","Hair dryer","Toaster","Microwave","Cellphone charger","Cloth iron"]
@@ -62,23 +61,11 @@ class Household:
         elTimeMin = [0,12,8,0,11,0,8,8,16,0,19]
         elTimeMax = [8,24,24,24,18,24,21,12,19,8,21]
         elType = [ElType.shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable_non_continious,ElType.shiftable]
-=======
-    def makeElappliances(self,number):
-        elNames = ["Dishwasher","Laundry machine","Electric vehicle","Lighting","Heating", "Refrigerator-freezer","Electric stove","TV","Computer","Router","Ceiling fan", "Separate Freezer"]
-        elPowerMin = [1.44,1.94,9.9,1,6.4,1.32,3.9,0.15,0.6,0.14,0.22,0.84]
-        elPowerMax = [1.44,1.94,9.9,2,9.6,3.96,3.9,0.6,0.6,0.14,0.22,0.84]
-        elMaxHourPower = [1.44,0.485,3.3,0.2,0.4,0.164,2,0.12,0.1,0.006,0.073,0.035]
-        elDuration = [1,4,3,10,24,24,3,5,6,24,3,24]     #2.5 changed to 3
-        elTimeMin = [0,0,0,9,0,0,0,0,0,0,0,0]
-        elTimeMax = [24,24,24,20,24,24,24,24,24,24,24,24]
-        elType = [ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable]
->>>>>>> master
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
             self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
 
 
-<<<<<<< HEAD
 def create_eq_constraints(appliance: list, hours=24):
     A_eq, b_eq = [], []
     index = 0
@@ -156,14 +143,11 @@ def schedule_multiple_non_continuous_appliances(appliances: list,
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
 
 
-=======
->>>>>>> master
 def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
     # Get the prices for the subset of the operational times for
     # the appliance. If timeMin > timeMax then the appliance can be
     # operation over 00.00
 
-<<<<<<< HEAD
     if (appliance.timeMax > 24):
         raise ValueError("Appliance timeMax cannot be greater than 24.")
     elif(appliance.timeMax == 0):
@@ -173,8 +157,6 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
         raise ValueError("Appliance timeMin cannot be grater than 23. If you \
                 mean midnight put 0 instead.")
 
-=======
->>>>>>> master
     if appliance.timeMin > appliance.timeMax:
         double_tmp = np.append(hourly_prices, hourly_prices)
         hourly_prices_subset = double_tmp[appliance.timeMin:
@@ -187,17 +169,8 @@ def get_hourly_prices_subset(appliance: ElAppliance, hourly_prices):
 
 
 def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
-<<<<<<< HEAD
     hourly_prices_subset = get_hourly_prices_subset(appliance, hourly_prices)
     hours = len(hourly_prices_subset)
-=======
-    #for x in hourly_prices:
-        #print(">>",x)
-    hourly_prices_subset = get_hourly_prices_subset(appliance, hourly_prices)
-    print(">>len(hourly_prices_subset):", len(hourly_prices_subset))
-    hours = len(hourly_prices_subset)
-    print(">>hours - appliance.duration : ",hours - appliance.duration)
->>>>>>> master
     num_possible_starting_hours = hours - appliance.duration
 
     # Lists in which to store equality and inequality matrices for each
@@ -207,10 +180,6 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     MA_eq = []
 
     # These loops populate the matrices with 0 and 1 for linear optimization
-<<<<<<< HEAD
-=======
-    print("num_possible_starting_hours + 1 :",num_possible_starting_hours + 1)
->>>>>>> master
     for i in range(num_possible_starting_hours + 1):
         ub = np.zeros([hours, hours])
         eq = np.zeros(hours)
@@ -230,10 +199,6 @@ def get_min_price_appliance_values(appliance: ElAppliance, hourly_prices):
     # Array that stores the total price for each hour
     price_schedule = []
     appliance_schedule = []
-<<<<<<< HEAD
-=======
-    print("len(MA_eq) : ",len(MA_eq))
->>>>>>> master
     for i in range(len(MA_eq)):
         # Extract the matrix for each hour
         A_eq = MA_eq[i]
@@ -264,11 +229,7 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
         price_hour_tmp.append((price_schedule[i], i+offset))
 
     price_hour_min_sorted = sorted(price_hour_tmp, key=lambda x: (x[0], x[1]))
-<<<<<<< HEAD
 
-=======
-    print(">>> len(appliance_schedule): ",len(appliance_schedule))
->>>>>>> master
     appliance_schedule_min_sorted = np.zeros(
             [len(price_hour_min_sorted),len(appliance_schedule[0])])
 
@@ -282,10 +243,6 @@ def min_sorted_schedule(price_schedule, appliance_schedule, offset):
 
 
 def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
-<<<<<<< HEAD
-=======
-    #print(appliance_schedule)
->>>>>>> master
     l = []
     if timeMax > timeMin:
         l = [np.insert(np.append(a, np.zeros(24 - timeMax)), 0,
@@ -297,47 +254,10 @@ def format_24h_appliance_schedule(appliance_schedule, timeMin, timeMax):
     return l
 
 
-<<<<<<< HEAD
 def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     price_schedule, tmp_app_schedule = get_min_price_appliance_values(
             appliance, hourly_prices)
 
-=======
-def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
-    hours = 24
-    A_ub = np.zeros([hours, hours])
-    a_eq = np.zeros(hours)
-    b_eq = appliance.dailyUsageMax
-    b_ub = np.zeros(hours)
-    if appliance.timeMax > appliance.timeMin:
-        for i in range(appliance.timeMin, appliance.timeMax):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-    else:
-        for i in range(appliance.timeMin, 24):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-        for i in range(0, appliance.timeMax):
-            a_eq[i] = 1
-    for i in range(len(b_ub)):
-        b_ub[i] = appliance.maxHourConsumption
-    A_eq = np.array([a_eq])
-    res = linprog(hourly_prices, A_ub, b_ub, np.array(A_eq), b_eq)
-    schedule = np.round_(res.x, decimals=2)
-    prices = np.multiply(hourly_prices, schedule)
-    # print(res)
-    # print(prices)
-    # print(np.sum(prices))
-    return np.sum(prices), schedule
-
-
-def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
-    #for x in hourly_prices:
-    #    print(">",x)
-    price_schedule, tmp_app_schedule = get_min_price_appliance_values(
-            appliance, hourly_prices)
-    print("hei 1: ", len(tmp_app_schedule))
->>>>>>> master
     price_schedule, tmp_app_schedule = min_sorted_schedule(price_schedule,
             tmp_app_schedule, appliance.timeMin)
 
@@ -363,11 +283,8 @@ class Neighborhood:
     def __init__(self,name,priceScheme):
         #inizalise
         self.name = name
-<<<<<<< HEAD
         self.dailyPowerTimetable =[]
         self.houses =[]
-=======
->>>>>>> master
         #for x in range(24):
             #self.dailyPowerTimetable.append(0)
         self.updateTimetable(priceScheme)
@@ -477,7 +394,6 @@ class Neighborhood:
             find_type_target = 4-i
             for appliance in houseForSchedule.elAppliance:
                 if appliance.elType.value == find_type_target:
-<<<<<<< HEAD
                     if appliance.elType.value == 2 or appliance.elType.value == 3:
                         if first is True:
                             priorityListCont.append(appliance)
@@ -496,9 +412,6 @@ class Neighborhood:
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
-=======
-                    priorityList.append(appliance)
->>>>>>> master
 
         return timeSchedule
 
@@ -511,7 +424,7 @@ class Neighborhood:
         priorityListCont = []
         priorityListNonCont =[]
         first = True
-<<<<<<< HEAD
+
         for i in range(4):
             find_type_target = 4-i
             for temp_house in self.houses:
@@ -524,8 +437,7 @@ class Neighborhood:
                             priorityListNonCont.append(appliance)
                         else:
                             priorityListCont.append(appliance)
-        #for x in range(len(priorityListCont)):
-        #    print("Appliance Type : ", priorityListCont[x].elType.value,"| Appliance Name : ",priorityListCont[x].name)
+
         for teller in range(len(priorityListCont)):
             if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
@@ -553,65 +465,3 @@ class Neighborhood:
             print("Timeframe end:", (printHouse.elAppliance[x].timeMax))
             print("Max Hourly Consumption: ", print.elAppliance[x].maxHourConsumption)
             print("Operating time in hours:", printHouse.elAppliance[x].duration)
-=======
-        for temp_el in priorityList:
-            print(temp_el.name," : ",temp_el.elType.value)
-
-            #kall på optimalisering
-            print("temp_el")
-            print(temp_el.name)
-            print(temp_el.timeMin)
-            print(temp_el.timeMax)
-            print("Duration")
-            print(temp_el.duration)
-            print("Dailypowertimetable")
-            print(self.dailyPowerTimetable)
-            price_schedule, appliance_schedule = get_sorted_price_appliance_schedule(temp_el,self.dailyPowerTimetable)
-            #first element
-            if first == True:
-                for x in range(24):
-                    timeSchedule[x] = appliance_schedule[0][x]
-                first =False
-            else:
-                #find all with lowest cost
-                current_lowest_value = price_schedule[0]
-                same_value_number = 0
-                for x in range(len(price_schedule)):
-                    if current_lowest_value == price_schedule[x]:
-                        same_value_number = x
-                #choose best option
-                current_load_on_timeslots = []
-                for y in range(same_value_number):
-                    find_pos =[]
-                    temp_load = 0
-                    for z in range(24):
-                        if appliance_schedule[y][z] > 0:
-                            find_pos.append(z)
-                    for pos in find_pos:
-                        temp_load = temp_load + timeSchedule[pos]
-                    current_load_on_timeslots.append(temp_load)
-                picked_opt = 0
-                low = 100000000000000000000
-                for tel in range(len(current_load_on_timeslots)):
-                    if current_load_on_timeslots[tel] < low:
-                        low = current_load_on_timeslots[tel]
-                        picked_opt = tel
-                for i in range(24):
-                    timeSchedule[i] = timeSchedule[i] + appliance_schedule[picked_opt][i]
-        return timeSchedule
-
-
-    def printInfo(self,houseNumber):
-        print("\nHouse Name: ", self.houses[houseNumber].name,"\n")
-        for x in range(len(self.houses[houseNumber].elAppliance)):
-            print(self.houses[houseNumber].elAppliance[x].name)
-            print("Timeframe start:", (self.houses[houseNumber].elAppliance[x].timeMin+1))
-            print("Timeframe end:", (self.houses[houseNumber].elAppliance[x].timeMax+1))
-            randomTime = self.houses[houseNumber].elAppliance[x].randomTime()
-            print("Actual start-time:", randomTime)
-            print("Operating time in hours:", self.houses[houseNumber].elAppliance[x].duration)
-            pricePerKWH = self.dailyPowerTimetable[randomTime]
-            print("Total energy usage (max):", self.houses[houseNumber].elAppliance[x].dailyUsageMax)
-            print("Energy price per kWh:", pricePerKWH)
-            print("Energy price in total:", pricePerKWH * self.houses[houseNumber].elAppliance[x].dailyUsageMax, "\n")
->>>>>>> master

@@ -1,15 +1,11 @@
 from objects import ElAppliance, Household, Neighborhood,ElType
-<<<<<<< HEAD
 import copy
-=======
->>>>>>> master
 
 if __name__ == "__main__":
     #                  0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
     costPerHourToU = [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5, 1 , 1 , 1 , 1 ,0.5,0.5,0.5]
     myNeighborhood = Neighborhood("Blindern","ToU")
 
-<<<<<<< HEAD
     #--#Task 1#--#
     print("\n\n#-----# Task 1 #-----#\n")
     #make house for Task 1:
@@ -17,12 +13,6 @@ if __name__ == "__main__":
     task1House.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 8, 17))
     task1House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
     task1House.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 4,ElType.shiftable, 8, 22))
-=======
-    myHouse = Household("test")
-    myHouse.elAppliance.append(ElAppliance("Dishwasher", 1.44, 1.44,1.44, 1,ElType.shiftable, 0, 23))
-    myHouse.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 23))
-    myHouse.elAppliance.append(ElAppliance("WashingMachine", 1.94, 1.94,0.485, 1,ElType.shiftable, 0, 23))
->>>>>>> master
 
     myNeighborhood.houses.append(task1House)
     #print price
@@ -34,7 +24,6 @@ if __name__ == "__main__":
     for x in range(len(test_list)):
         print("Task1: Powerload hour ",x+1," : ",test_list[x])
 
-<<<<<<< HEAD
     #--#Task 2#--#
     print("\n\n#-----# Task 2 #-----#\n")
     #change price scheme to Real Time Pricing
@@ -54,10 +43,6 @@ if __name__ == "__main__":
     blueprintHouse.elAppliance.append(ElAppliance("Electric stove",3.9,3.9,2,3,ElType.non_shiftable_non_continious,15,20))
     blueprintHouse.elAppliance.append(ElAppliance("TV",0.15,0.6,0.2,5,ElType.non_shiftable_non_continious,12,24))
     blueprintHouse.elAppliance.append(ElAppliance("Computer",0.6,0.6,0.1,6,ElType.non_shiftable_non_continious,8,24))
-=======
-    #for x in range(len(myNeighborhood.houses)):
-    #    myNeighborhood.printInfo(x)
->>>>>>> master
 
     #make house for Task 2
     task2House = copy.deepcopy(blueprintHouse)
@@ -82,7 +67,6 @@ if __name__ == "__main__":
     #make neigbourhood for task 3
     task3Neighborhood = Neighborhood("Majorstua","RTP")
 
-<<<<<<< HEAD
     #for test
     #hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,   0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
     #task3Neighborhood.dailyPowerTimetable = hourly_prices
@@ -104,23 +88,21 @@ if __name__ == "__main__":
     test_list = task3Neighborhood.testUseElAppliancesMulti()
     for x in range(len(test_list)):
         print("Task3: Powerload hour ",x+1," : ",test_list[x])
-=======
-    #for x in range(len(myNeighborhood.houses)):
-    #    myNeighborhood.printInfo(x)
 
-    #myNeighborhood.updateTimetable("RTP")
-    #for x in range(len(myNeighborhood.dailyPowerTimetable)):
-    #    print(myNeighborhood.dailyPowerTimetable[x])
+    #--#Task 4#--#
+    print("\n\n#-----# Task 4 #-----#\n")
+    #update pricing
+    myNeighborhood.updateTimetable("RTP")
+    #print price
+    for x in range(24):
+        print("Task4: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+    print("\n")
 
-    #for x in range(len(myNeighborhood.houses)):
-    #    myNeighborhood.printInfo(x)
-    print(len(myNeighborhood.dailyPowerTimetable))
-    #for x in myNeighborhood.dailyPowerTimetable:
-        #print(x)
-    test_list = myNeighborhood.testUseElAppliancesSolo("test")
-    for x in test_list:
-        print(x)
-    #myNeighborhood.testUseElAppliancesSolo("test")
-    #print(myNeighborhood.getHouse("test").name)
-    #print(myNeighborhood.getHouse("testt") is None)
->>>>>>> master
+    task4House = copy.deepcopy(blueprintHouse)
+    task4House.name = "Oppgave4"
+    task4House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
+    task4House.makeElappliancesAux(5) #gives 5 random ElAppliances for the house
+    myNeighborhood.houses.append(task4House)
+    for x in range(len(task4House.elAppliance)):
+        print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task2House.elAppliance[x].name)
+    print("\n")

@@ -270,41 +270,6 @@ def pick_random_appliances(appliances: list):
 
     return picked_appliances
 
-<<<<<<< HEAD
-# ev = ElAppliance("Electric Vehicle", 9.9, 9.9, 3, timeMin=0, timeMax=8)
-# lm = ElAppliance("Laundry Machine", 1.94, 1.94, 4, timeMin=8, timeMax=17)
-# dw = ElAppliance("Dishwasher", 1.44, 1.44, 1)
-#
-# house = Household("Mi Casa", [ev, lm, dw])
-#
-#
-#
-# prices = []
-# for i in range(24):
-#     prices.insert(i, 1) if 17 <= i <= 20 else prices.insert(i, 0.5)
-#
-# cost_function_price_vector = []
-# for i in range(len(house.elAppliance)):
-#     cost_function_price_vector += prices
-#
-# # print(len(prices))
-# # print(len(cost_function_price_vector))
-# # print(len(A_ub))
-# print(len(b_ub))
-# print(b_ub)
-# # print(len(A_eq))
-# # print(A_eq)
-# # print(len(b_eq))
-# # print(b_eq)
-# # print(A_eq)
-# # print(A_ub)
-# #
-# res = linprog(cost_function_price_vector,
-#         A_ub=A_ub, b_ub=b_ub,
-#         A_eq=A_eq, b_eq=b_eq)
-#
-# print(res)
-=======
 
 def make_neighbourhood(num_houses: int, appliances: list):
     neighbourhood = []
@@ -318,7 +283,6 @@ def make_neighbourhood(num_houses: int, appliances: list):
 
     print(neighbourhood)
     return neighbourhood
->>>>>>> master
 
 hourly_prices = [0.1, 0.1,
         0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
@@ -333,12 +297,6 @@ hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
 >>>>>>> master
 
 
-<<<<<<< HEAD
-A_eq, b_eq = eq_constraints(house)
-A_ub, b_ub = ub_constraints(house)
-
-res = linprog()
-=======
 lght = ElAppliance("Lighing", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20)
 heat = ElAppliance("Heating", 6.4, 9.6, 0.4, 24, ElType.non_shiftable, timeMin=0, timeMax=24)
 ev = ElAppliance("Electric batmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable, timeMin=0, timeMax=8)
@@ -411,4 +369,3 @@ house = Household("Mi Casa", appliances2)
 #
 # res = get_optimal_hours_for_continuous(ev, hourly_prices)
 # print(res)
->>>>>>> master
