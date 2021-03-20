@@ -7,6 +7,12 @@ from classes import ElAppliance, Household, ElType
 import price_scheduling as ps
 import random
 
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', -1)
+
 # Create vectors and matrices that define equality constraints
 def create_eq_constraints(appliance: list, hours=24):
     A_eq, b_eq = [], []
@@ -66,7 +72,7 @@ def optimization_appliance_schedule(appliances: list,
     # options = { 'cholesky': False, 'sym_pos': False }
     # res = linprog(c, A_ub, b_ub, A_eq, b_eq, options=options)
     res = linprog(c, A_ub, b_ub, A_eq, b_eq)
-    # print(res)
+    print(res)
     x = np.round_(res.x, decimals=4)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
@@ -313,10 +319,6 @@ def make_list():
 #
 # df = get_neighbourhood_load_schedule(neighbourhood, hourly_prices)
 #
-# pd.set_option('display.max_rows', None)
-# pd.set_option('display.max_columns', None)
-# pd.set_option('display.width', None)
-# pd.set_option('display.max_colwidth', -1)
 #
 # print(df)
 # for h in neighbourhood:
