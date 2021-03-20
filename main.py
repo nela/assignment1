@@ -74,7 +74,7 @@ if __name__ == "__main__":
         print("Task3: Price in timeslot ",x+1," : ",task3Neighborhood.dailyPowerTimetable[x])
     print("\n")
     #fill Neighborhood with 30 houses
-    for x in range(3):
+    for x in range(30):
         task3House = blueprintHouse
         task3House.name = str(x)
         if ((x % 4) == 0): #give some houses Electronic Vehicle

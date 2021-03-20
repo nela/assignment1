@@ -136,7 +136,6 @@ def schedule_multiple_non_continuous_appliances(appliances: list,
     A_eq, b_eq = create_eq_constraints(appliances)
     A_ub, b_ub = create_ub_constraints(appliances)
     res = linprog(c, A_ub, b_ub, A_eq, b_eq, bounds=optimization_bounds)
-    #print(res)
     x = np.round_(res.x, decimals=2)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]
@@ -301,7 +300,7 @@ class Neighborhood:
         temp_schedule = timeSchedule
         non_appliance_schedule = schedule_multiple_non_continuous_appliances(priorityListNonCont,self.dailyPowerTimetable)
         for y in range(len(non_appliance_schedule)):
-            print("non_appliance_schedule",y," : ",non_appliance_schedule[y])
+            #print("non_appliance_schedule",y," : ",non_appliance_schedule[y])
             for x in range(24):
                 temp_schedule[x] = temp_schedule[x] + non_appliance_schedule[y][x]
         return temp_schedule
@@ -363,12 +362,10 @@ class Neighborhood:
         for teller in range(len(houseForSchedule.elAppliance)):
             if (houseForSchedule.elAppliance[teller].elType.value == 4) or (houseForSchedule.elAppliance[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,houseForSchedule.elAppliance[teller])
-                #print(">Con>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
             elif(((houseForSchedule.elAppliance[teller].elType.value == 3) or (houseForSchedule.elAppliance[teller].elType.value == 2))and ones is True):
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
-                #print(">NCon>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
                 ones = False
@@ -407,15 +404,12 @@ class Neighborhood:
         for teller in range(len(priorityListCont)):
             if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
-                #print(">Con>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
             elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
-                #print(">NCon>", temp_schedule)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
-                #teller = teller +len(priorityListNonCont)
 
         return timeSchedule
 
