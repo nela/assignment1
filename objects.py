@@ -70,7 +70,7 @@ class Household:
         elMaxHourPower = [3.3,0.12,0.1,0.006,0.073,0.035,0.19,0.30,0.6,0.003,0.28]
         elDuration = [3,5,6,24,3,24,1,1,1,3,1]
         elTimeMin = [0,12,8,0,11,0,8,8,16,0,19]
-        elTimeMax = [24,24,24,24,18,24,21,12,19,8,21]
+        elTimeMax = [8,24,24,24,18,24,21,12,19,8,21]
         elType = [ElType.shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.shiftable_non_continious,ElType.shiftable]
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
@@ -304,8 +304,7 @@ def get_sorted_price_appliance_schedule(appliance: ElAppliance, hourly_prices):
     return price_schedule, appliance_schedule
 
 class Neighborhood:
-    dailyPowerTimetable =[]
-    houses =[]
+
 
     def updateTimetable(self,type):
         if type == "ToU":
@@ -321,6 +320,8 @@ class Neighborhood:
     def __init__(self,name,priceScheme):
         #inizalise
         self.name = name
+        self.dailyPowerTimetable =[]
+        self.houses =[]
         #for x in range(24):
             #self.dailyPowerTimetable.append(0)
         self.updateTimetable(priceScheme)
@@ -444,18 +445,15 @@ class Neighborhood:
                             priorityListCont.append(appliance)
         #for x in range(len(priorityListCont)):
         #    print("Appliance Type : ", priorityListCont[x].elType.value,"| Appliance Name : ",priorityListCont[x].name)
-        print(len(priorityListNonCont))
         for teller in range(len(priorityListCont)):
             if (priorityListCont[teller].elType.value == 4) or (priorityListCont[teller].elType.value == 1):
                 temp_schedule = self.do_Continious(timeSchedule,priorityListCont[teller])
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
             elif(priorityListCont[teller].elType.value == 3) or (priorityListCont[teller].elType.value == 2):
-                print(timeSchedule)
                 temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
                 for x in range(24):
                     timeSchedule[x] = temp_schedule[x]
-                print(timeSchedule)
 
         return timeSchedule
 

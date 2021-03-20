@@ -62,9 +62,13 @@ if __name__ == "__main__":
     print("\n\n#-----# Task 3 #-----#\n")
     #make neigbourhood for task 3
     task3Neighborhood = Neighborhood("Majorstua","RTP")
+
+    #for test
+    hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,   0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+    task3Neighborhood.dailyPowerTimetable = hourly_prices
     #print price
     for x in range(24):
-        print("Task3: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
+        print("Task3: Price in timeslot ",x+1," : ",task3Neighborhood.dailyPowerTimetable[x])
     print("\n")
     #fill Neighborhood with 30 houses
     for x in range(3):
@@ -74,6 +78,7 @@ if __name__ == "__main__":
             task3House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
         #task3House.makeElappliancesAux(5)
         task3Neighborhood.houses.append(task3House)
+
 
     #run scheduling methode for Neighborhood
     test_list = task3Neighborhood.testUseElAppliancesMulti()
