@@ -1,3 +1,4 @@
+import copy
 import random
 from generate_rt_prices import daily_price
 import numpy as np
@@ -43,11 +44,21 @@ class Household:
     #constructor
     def __init__(self, name, appliances=None):
         #inizalise
+<<<<<<< HEAD
         self.name = name
         self.elAppliance = []
+=======
+>>>>>>> master
         if appliances is not None:
-            for a in appliances:
-                self.elAppliance.append(a)
+            self.elAppliance = copy.deepcopy(appliances)
+        else:
+            self.elAppliance = []
+
+        self.name = name
+
+        # if appliances is not None:
+        #     for a in appliances:
+        #         self.elAppliance.append(a)
 
 
     #improved methode of makeElappliances for task 2,3 and 4 house
