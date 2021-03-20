@@ -57,6 +57,9 @@ if __name__ == "__main__":
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
         print("Task2: Powerload hour ",x+1," : ",test_list[x])
+    test_list2 = myNeighborhood.testUseElAppliancesSolo2("Oppgave2")
+    for x in range(len(test_list2)):
+        print("Task2: Powerload hour ",x+1," : ",test_list2[x])
 
     #--#Task 3#--#
     print("\n\n#-----# Task 3 #-----#\n")
@@ -64,8 +67,8 @@ if __name__ == "__main__":
     task3Neighborhood = Neighborhood("Majorstua","RTP")
 
     #for test
-    hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,   0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
-    task3Neighborhood.dailyPowerTimetable = hourly_prices
+    #hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,   0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+    #task3Neighborhood.dailyPowerTimetable = hourly_prices
     #print price
     for x in range(24):
         print("Task3: Price in timeslot ",x+1," : ",task3Neighborhood.dailyPowerTimetable[x])

@@ -48,19 +48,6 @@ class Household:
             for a in appliances:
                 self.elAppliance.append(a)
 
-    #can be deleted: just in case new methode breaks or we want the old values
-    def makeElappliances(self,number):
-        elNames = ["Dishwasher","Laundry machine","Electric vehicle","Lighting","Heating", "Refrigerator-freezer","Electric stove","TV","Computer","Router","Ceiling fan", "Separate Freezer"]
-        elPowerMin = [1.44,1.94,9.9,1,6.4,1.32,3.9,0.15,0.6,0.14,0.22,0.84]
-        elPowerMax = [1.44,1.94,9.9,2,9.6,3.96,3.9,0.6,0.6,0.14,0.22,0.84]
-        elMaxHourPower = [1.44,0.485,3.3,0.2,0.4,0.164,2,0.12,0.1,0.006,0.073,0.035]
-        elDuration = [1,4,3,10,24,24,3,5,6,24,3,24]     #2.5 changed to 3
-        elTimeMin = [0,0,0,9,0,0,0,0,0,0,0,0]
-        elTimeMax = [24,24,24,20,24,24,24,24,24,24,24,24]
-        elType = [ElType.shiftable,ElType.shiftable,ElType.shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable_non_continious,ElType.non_shiftable,ElType.non_shiftable_non_continious,ElType.non_shiftable]
-        for x in range(number):
-            pick = random.randint(0, (len(elNames)-1))
-            self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
 
     #improved methode of makeElappliances for task 2,3 and 4 house
     def makeElappliancesAux(self,number):
@@ -75,31 +62,6 @@ class Household:
         for x in range(number):
             pick = random.randint(0, (len(elNames)-1))
             self.elAppliance.append(ElAppliance(elNames[pick],elPowerMin[pick],elPowerMax[pick],elMaxHourPower[pick],elDuration[pick],elType[pick],elTimeMin[pick],elTimeMax[pick]))
-
-
-def schedule_non_continous_appliance(appliance: ElAppliance, hourly_prices):
-    hours = 24
-    A_ub = np.zeros([hours, hours])
-    a_eq = np.zeros(hours)
-    b_eq = appliance.dailyUsageMax
-    b_ub = np.zeros(hours)
-    if appliance.timeMax > appliance.timeMin:
-        for i in range(appliance.timeMin, appliance.timeMax):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-    else:
-        for i in range(appliance.timeMin, 24):
-            A_ub[i][i] = 1
-            a_eq[i] = 1
-        for i in range(0, appliance.timeMax):
-            a_eq[i] = 1
-    for i in range(len(b_ub)):
-        b_ub[i] = appliance.maxHourConsumption
-    A_eq = np.array([a_eq])
-    res = linprog(hourly_prices, A_ub, b_ub, np.array(A_eq), b_eq)
-    schedule = np.round_(res.x, decimals=2)
-    prices = np.multiply(hourly_prices, schedule)
-    return np.sum(prices), schedule
 
 
 def create_eq_constraints(appliance: list, hours=24):
@@ -378,6 +340,41 @@ class Neighborhood:
             temp_schedule[i] = temp_schedule[i] + appliance_schedule[picked_opt][i]
         return temp_schedule
 
+    #uten priority
+    def testUseElAppliancesSolo2(self,houseName):
+        timeSchedule = []
+        for x in range(24):
+            timeSchedule.append(0)
+
+        houseForSchedule = self.getHouse(houseName)
+        if houseForSchedule is None:
+            print("No house with that Name : ",houseName)
+            return None
+
+        priorityListNonCont = []
+
+        #for loop to sort so ElType with a higher value gets placed first in timeSchedule
+        for appliance in houseForSchedule.elAppliance:
+            if appliance.elType.value == 2 or appliance.elType.value == 3:
+                priorityListNonCont.append(appliance)
+
+        #for loop through all elAppliances sorted in previous for loop with call on relevant optimization methode
+        ones = True
+        for teller in range(len(houseForSchedule.elAppliance)):
+            if (houseForSchedule.elAppliance[teller].elType.value == 4) or (houseForSchedule.elAppliance[teller].elType.value == 1):
+                temp_schedule = self.do_Continious(timeSchedule,houseForSchedule.elAppliance[teller])
+                #print(">Con>", temp_schedule)
+                for x in range(24):
+                    timeSchedule[x] = temp_schedule[x]
+            elif(((houseForSchedule.elAppliance[teller].elType.value == 3) or (houseForSchedule.elAppliance[teller].elType.value == 2))and ones is True):
+                temp_schedule = self.do_Non_Continious(timeSchedule,priorityListNonCont)
+                #print(">NCon>", temp_schedule)
+                for x in range(24):
+                    timeSchedule[x] = temp_schedule[x]
+                ones = False
+
+        return timeSchedule
+
     #methode that plan usage of machines for one household
     def testUseElAppliancesSolo(self,houseName):
         timeSchedule = []
@@ -458,16 +455,17 @@ class Neighborhood:
         return timeSchedule
 
 
-    def printInfo(self,houseNumber):
-        print("\nHouse Name: ", self.houses[houseNumber].name,"\n")
-        for x in range(len(self.houses[houseNumber].elAppliance)):
-            print(self.houses[houseNumber].elAppliance[x].name)
-            print("Timeframe start:", (self.houses[houseNumber].elAppliance[x].timeMin+1))
-            print("Timeframe end:", (self.houses[houseNumber].elAppliance[x].timeMax+1))
-            randomTime = self.houses[houseNumber].elAppliance[x].randomTime()
-            print("Actual start-time:", randomTime)
-            print("Operating time in hours:", self.houses[houseNumber].elAppliance[x].duration)
-            pricePerKWH = self.dailyPowerTimetable[randomTime]
-            print("Total energy usage (max):", self.houses[houseNumber].elAppliance[x].dailyUsageMax)
-            print("Energy price per kWh:", pricePerKWH)
-            print("Energy price in total:", pricePerKWH * self.houses[houseNumber].elAppliance[x].dailyUsageMax, "\n")
+    def printInfo(self,houseName):
+        printHouse = self.getHouse(houseName)
+        if printHouse is None:
+            print("No house with that Name : ",houseName)
+            return None
+
+        print("\nHouse Name: ", printHouse.name,"\n")
+        print("ElAppliance list:")
+        for x in range(len(printHouse.elAppliance)):
+            print(printHouse.elAppliance[x].name)
+            print("Timeframe start:", (printHouse.elAppliance[x].timeMin+1))
+            print("Timeframe end:", (printHouse.elAppliance[x].timeMax))
+            print("Max Hourly Consumption: ", print.elAppliance[x].maxHourConsumption)
+            print("Operating time in hours:", printHouse.elAppliance[x].duration)
