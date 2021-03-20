@@ -105,7 +105,7 @@ if __name__ == "__main__":
     task4House.makeElappliancesAux(5) #gives 5 random ElAppliances for the house
     myNeighborhood.houses.append(task4House)
     for x in range(len(task4House.elAppliance)):
-        print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task2House.elAppliance[x].name)
+        print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task4House.elAppliance[x].name)
     print("\n")
 
     df = opt.get_load_schedule(task4House.elAppliance, myNeighborhood.dailyPowerTimetable, task4=True, peak_load=3.7)
