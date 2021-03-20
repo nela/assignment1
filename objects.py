@@ -67,7 +67,7 @@ class Household:
         elNames = ["Electric vehicle","TV","Computer","Router","Ceiling fan", "Separate Freezer","Hair dryer","Toaster","Microwave","Cellphone charger","Cloth iron"]
         elPowerMin = [9.9,0.15,0.6,0.14,0.22,0.84,0.19,0.30,0.6,0.01,0.28]
         elPowerMax = [9.9,0.6,0.6,0.14,0.22,0.84,0.19,0.30,0.6,0.01,0.28]
-        elMaxHourPower = [3.3,0.12,0.1,0.006,0.073,0.035,0.19,0.30,0.6,0.003,0.28]
+        elMaxHourPower = [3.3,0.2,0.1,0.006,0.073,0.035,0.19,0.30,0.6,0.003,0.28]
         elDuration = [3,5,6,24,3,24,1,1,1,3,1]
         elTimeMin = [0,12,8,0,11,0,8,8,16,0,19]
         elTimeMax = [8,24,24,24,18,24,21,12,19,8,21]

@@ -40,7 +40,7 @@ if __name__ == "__main__":
     blueprintHouse.elAppliance.append(ElAppliance("Heating",6.4,9.6,0.4,24,ElType.non_shiftable,0,24))
     blueprintHouse.elAppliance.append(ElAppliance("Refrigerator-freezer",1.32,3.96,0.164,24,ElType.non_shiftable,0,24))
     blueprintHouse.elAppliance.append(ElAppliance("Electric stove",3.9,3.9,2,3,ElType.non_shiftable_non_continious,15,20))
-    blueprintHouse.elAppliance.append(ElAppliance("TV",0.15,0.6,0.12,5,ElType.non_shiftable_non_continious,12,24))
+    blueprintHouse.elAppliance.append(ElAppliance("TV",0.15,0.6,0.2,5,ElType.non_shiftable_non_continious,12,24))
     blueprintHouse.elAppliance.append(ElAppliance("Computer",0.6,0.6,0.1,6,ElType.non_shiftable_non_continious,8,24))
 
     #make house for Task 2
