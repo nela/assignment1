@@ -2,8 +2,8 @@ import copy
 import numpy as np
 import pandas as pd
 from scipy.optimize import linprog
-# from objects import ElAppliance, Household, ElType
-from classes import ElAppliance, Household, ElType
+from objects import ElAppliance, Household, ElType
+# from classes import ElAppliance, Household, ElType
 import price_scheduling as ps
 import random
 
@@ -53,6 +53,7 @@ def create_ub_constraints(appliances: list, hours=24, task4=False, peak_load=Non
         for h in range(hours):
             a_ub = np.zeros(hours*len(appliances))
             for i in range(0, hours*len(appliances), hours):
+                print(h+i)
                 a_ub[h+i] = 1
 
             A_ub.append(a_ub)
@@ -85,7 +86,7 @@ def sort_appliances(appliances: list):
     for a in appliances:
         if a.elType == ElType.shiftable:
             shiftable_continuous.append(a)
-        elif a.elType == ElType.shiftable_non_continuous:
+        elif a.elType == ElType.shiftable_non_continious:
             shiftable_non_continuous.append(a)
         elif a.elType == ElType.non_shiftable:
             non_shiftable.append(a)
@@ -271,8 +272,8 @@ def make_neighbourhood(num_houses: int):
     return neighbourhood
 
 
-# hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-#         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
+hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
+        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
 
 
 def make_list():
@@ -299,11 +300,11 @@ def make_list():
 
     appliances = [lght, heat, rfrg, stove, ev, ev2, tv, computer, router, fan,
            freezer, dw, lm, dryer, iron, cellcharger, mw, hd, toaster]
+    appliances2 = [lght, heat, ev, stove, ev2]
     return copy.deepcopy(appliances)
 
-# appliances2 = [lght, heat, ev, stove, ev2]
 
-# house = Household("Mi Casa", appliances)
+house = Household("Mi Casa", make_list())
 
 # load = get_total_daily_load(house)
 # print(load)
@@ -337,9 +338,9 @@ def make_list():
 # Task 4
 # df = get_load_schedule(house.elAppliance, hourly_prices)
 # print(df)
-# df = get_load_schedule(house, hourly_prices, task4=True, peak_load=3.7)
-#
-# print(df)
+df = get_house_load_schedule(house, hourly_prices, task4=True, peak_load=6)
+
+print(df)
 
 
 
