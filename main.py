@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #--#Task 4#--#
     print("\n\n#-----# Task 4 #-----#\n")
     #update pricing
-    myNeighborhood.updateTimetable("RTP")
+    #myNeighborhood.updateTimetable("RTP")
     #print price
     for x in range(24):
         print("Task4: Price in timeslot ",x+1," : ",myNeighborhood.dailyPowerTimetable[x])
@@ -108,6 +108,7 @@ if __name__ == "__main__":
         print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task4House.elAppliance[x].name)
     print("\n")
 
-    df = opt.get_load_schedule(task4House.elAppliance, myNeighborhood.dailyPowerTimetable, task4=True, peak_load=3.7)
+    #df = opt.get_load_schedule(task4House.elAppliance, myNeighborhood.dailyPowerTimetable, task4=True, peak_load=50.5)
+    df = opt.get_load_schedule(task2House.elAppliance, myNeighborhood.dailyPowerTimetable, task4=True, peak_load=50.5)
 
     print(df)

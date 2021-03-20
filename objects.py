@@ -44,11 +44,6 @@ class Household:
     #constructor
     def __init__(self, name, appliances=None):
         #inizalise
-<<<<<<< HEAD
-        self.name = name
-        self.elAppliance = []
-=======
->>>>>>> master
         if appliances is not None:
             self.elAppliance = copy.deepcopy(appliances)
         else:
