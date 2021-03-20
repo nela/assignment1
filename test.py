@@ -32,7 +32,7 @@ hourly_prices = [0.2232432246591243,
         0.44726107193671527]
 
 
-house_schedule = opt.get_house_load_schedule(house, hourly_prices, peak_load)
+house_schedule = opt.get_house_load_schedule(house, hourly_prices)
 print(house_schedule)
 
 # neighbourhood_schedule = opt.get_neighbourhood_load_schedule(neighbourhood.houses, hourly_prices)

@@ -28,22 +28,40 @@ class ElAppliance:
 class Household:
     def __init__(self, name):
         self.name = name
-        self.elAppliance = self.make_standard_appliances() + self.make_aux_appliances()
+        self.elAppliance = self.make_standard_appliances() + self.make_aux_appliancesFast()
 
     def make_standard_appliances(self):
         appliances = []
-        appliances.append(ElAppliance("Lighing", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20))
+        appliances.append(ElAppliance("Lighting", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20))
         appliances.append(ElAppliance("Heating", 6.4, 9.6, 0.4, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Stove", 3.9, 3.9, 2, 3, ElType.shiftable, timeMin=14, timeMax=22))
+        appliances.append(ElAppliance("Refrigerator", 1.32, 3.96, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
+        appliances.append(ElAppliance("TV", 0.15, 0.6, 0.12, 5, ElType.non_shiftable, timeMin=17, timeMax=22))
+        appliances.append(ElAppliance("Computer", 0.6, 0.6, 0.1, 6, ElType.non_shiftable, timeMin=8, timeMax=24))
+        appliances.append(ElAppliance("Dishwasher", 1.44, 1.44, 1.44, 1, ElType.shiftable_non_continuous, timeMin=14, timeMax=24))
+        appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
+        appliances.append(ElAppliance("Cloth Dryer", 2.5, 2.5, 2.5, 1, ElType.shiftable, timeMin=0, timeMax=20))
         #.... Resten av standarde appliances
 
         # Deeop copy for å unngå statisk dritt
         return copy.deepcopy(appliances)
 
+    def make_aux_appliancesFast(self):
+        appliances = []
+
+        appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
+        appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=12, timeMax=20))
+        appliances.append(ElAppliance("Refrigerator", 1.32, 3.96, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
+        appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
+        # .... Resten av aux appliances
+
+        # random.sample velger ut random appliances med antall=num_appliances
+        return copy.deepcopy(appliances)
+
     def make_aux_appliances(self):
         appliances = []
 
-        appliances.append(ElAppliance("Electric batmobile", 9.9, 9.9, 3.3, 3, ElType.shiftable, timeMin=0, timeMax=8))
+        appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
         appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=12, timeMax=20))
         appliances.append(ElAppliance("Refrigerator", 1.32, 3.96, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
