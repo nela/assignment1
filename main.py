@@ -1,4 +1,5 @@
 from objects import ElAppliance, Household, Neighborhood,ElType
+import copy
 
 if __name__ == "__main__":
     #                  0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
@@ -44,22 +45,22 @@ if __name__ == "__main__":
     blueprintHouse.elAppliance.append(ElAppliance("Computer",0.6,0.6,0.1,6,ElType.non_shiftable_non_continious,8,24))
 
     #make house for Task 2
-    task2House = blueprintHouse
+    task2House = copy.deepcopy(blueprintHouse)
     task2House.name = "Oppgave2"
     task2House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
     task2House.makeElappliancesAux(5) #gives 5 random ElAppliances for the house
     myNeighborhood.houses.append(task2House)
     for x in range(len(task2House.elAppliance)):
-        print(">name : ", task2House.elAppliance[x].name," ElType : ",task2House.elAppliance[x].elType.value)
+        print(">ElType : ",task2House.elAppliance[x].elType.value,"name : ", task2House.elAppliance[x].name)
     print("\n")
 
     #run scheduling for task2House
     test_list = myNeighborhood.testUseElAppliancesSolo("Oppgave2")
     for x in range(len(test_list)):
         print("Task2: Powerload hour ",x+1," : ",test_list[x])
-    test_list2 = myNeighborhood.testUseElAppliancesSolo2("Oppgave2")
-    for x in range(len(test_list2)):
-        print("Task2: Powerload hour ",x+1," : ",test_list2[x])
+    #test_list2 = myNeighborhood.testUseElAppliancesSolo2("Oppgave2")
+    #for x in range(len(test_list2)):
+    #    print("Task2: Powerload hour ",x+1," : ",test_list2[x])
 
     #--#Task 3#--#
     print("\n\n#-----# Task 3 #-----#\n")
@@ -75,11 +76,11 @@ if __name__ == "__main__":
     print("\n")
     #fill Neighborhood with 30 houses
     for x in range(30):
-        task3House = blueprintHouse
+        task3House = copy.deepcopy(blueprintHouse)
         task3House.name = str(x)
         if ((x % 4) == 0): #give some houses Electronic Vehicle
             task3House.elAppliance.append(ElAppliance("EV", 9.9, 9.9,3.3, 3,ElType.shiftable_non_continious, 0, 8))
-        #task3House.makeElappliancesAux(5)
+        task3House.makeElappliancesAux(5)
         task3Neighborhood.houses.append(task3House)
 
 
