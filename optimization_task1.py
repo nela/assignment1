@@ -86,7 +86,6 @@ def create_ub_constraints(appliances: list, hours=24, task4=False, peak_load=Non
             A_ub.append(a_ub)
             b_ub.append(peak_load)
 
-    print(len(A_ub))
     return A_ub, b_ub
 
 
@@ -111,13 +110,13 @@ def sort_appliances(appliances: list):
     shiftable_continuous = []
     shiftable_non_continuous = []
     non_shiftable = []
-    for appliance in house.elAppliance:
-        if appliance.elType == ElType.shiftable:
-            shiftable_continuous.append(appliance)
-        elif appliance.elType == ElType.shiftable_non_continious:
-            shiftable_non_continuous.append(appliance)
-        elif appliance.elType == ElType.non_shiftable:
-            non_shiftable.append(appliance)
+    for a in appliances:
+        if a.elType == ElType.shiftable:
+            shiftable_continuous.append(a)
+        elif a.elType == ElType.shiftable_non_continious:
+            shiftable_non_continuous.append(a)
+        elif a.elType == ElType.non_shiftable:
+            non_shiftable.append(a)
 
     return shiftable_continuous, shiftable_non_continuous, non_shiftable
 
@@ -170,7 +169,7 @@ def get_house_load_schedule_depr(house: Household, hourly_prices: list):
 
 def get_optimal_hours_for_continuous(appliance: ElAppliance, hourly_prices):
     cost = []
-    for h in range(appliance.timeMin, appliance.timeMax):
+    for h in range(appliance.timeMin, appliance.timeMax-appliance.duration):
         cost.append((sum(hourly_prices[h:(h+appliance.duration)]), h))
 
     sorted_cost = sorted(cost, key=lambda x: (x[0], x[1]))
@@ -357,8 +356,8 @@ house = Household("Mi Casa", appliances2)
 #
 
 # Task 4
-# df = get_load_schedule(house, hourly_prices)
-# print(df)
+df = get_load_schedule(house.elAppliance, hourly_prices)
+print(df)
 # df = get_load_schedule(house, hourly_prices, task4=True, peak_load=3.7)
 #
 # print(df)
