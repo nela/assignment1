@@ -108,6 +108,6 @@ if __name__ == "__main__":
         print(">ElType : ",task4House.elAppliance[x].elType.value,"name : ", task2House.elAppliance[x].name)
     print("\n")
 
-    df = opt.get_load_schedule(task4House, hourly_prices, task4=True, peak_load=3.7)
+    df = opt.get_load_schedule(task4House.elAppliance, myNeighborhood.dailyPowerTimetable, task4=True, peak_load=3.7)
 
     print(df)

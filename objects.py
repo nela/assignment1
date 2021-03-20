@@ -43,7 +43,6 @@ class Household:
     #constructor
     def __init__(self, name, appliances=None):
         #inizalise
-        self.elAppliance = []
         self.name = name
         self.elAppliance = []
         if appliances is not None:

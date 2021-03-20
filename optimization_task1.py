@@ -23,41 +23,6 @@ def create_eq_constraints(appliance: list, hours=24):
     return A_eq, b_eq
 
 
-def create_eq_constraints(house: Household, hours=24):
-    A_eq, b_eq = [], []
-    index = 0
-
-    for a: ElAppliance in house.elAppliance:
-        a_eq = np.zeros(hours * len(house.elAppliance))
-
-        for i in range(index + a.timeMin, index + a.timeMax):
-            a_eq[i] = 1
-
-        index += hours
-
-        A_eq.append(a_eq)
-        b_eq.append(a.dailyUsageMax)
-
-    return A_eq, b_eq
-
-
-def create_ub_constraints(house: Household, hours=24):
-    A_ub, b_ub = [], []
-    index = 0
-
-    for a: ElAppliance in house.elAppliance:
-        for h in range(hours):
-            a_ub = np.zeros(hours * len(house.elAppliance))
-
-            if h > appliance.timeMin and h < appliance.timeMax:
-                a_ub[index + h] = 1
-
-
-            A_ub.append(a_ub)
-        index += hours
-    pass
-
-
 # Create vectors and matrices that define the inequality constraints
 def create_ub_constraints(appliances: list, hours=24, task4=False, peak_load=None):
     A_ub, b_ub = [], []
@@ -283,17 +248,9 @@ def make_neighbourhood(num_houses: int, appliances: list):
     print(neighbourhood)
     return neighbourhood
 
-hourly_prices = [0.1, 0.1,
-        0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
-        0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
 
-<<<<<<< HEAD
-house = Household("mi CAsa")
-house.makeElappliances(6)
-=======
 hourly_prices = [0.1, 0.1, 0.3, 0.2, 0.1, 0.1, 0.2, 0.1, 0.3,
         0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.2,0.3, 0.3, 0.3, 0.1]
->>>>>>> master
 
 
 lght = ElAppliance("Lighing", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20)
