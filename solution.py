@@ -54,8 +54,9 @@ def task1():
     print(df)
 
 
-def task2():
-    house = Household("My House", single=True)
+def task2(single=False):
+    house = Household("My House", single=single)
+
     schedule = get_house_load_schedule(house, hourly_prices)
     total_daily_load = get_total_daily_load(house)
     total_hourly_load = get_hourly_load(schedule)
@@ -102,7 +103,10 @@ if len(sys.argv) < 2:
 elif sys.argv[1] == '--task1':
     task1()
 elif sys.argv[1] == '--task2':
-    task2()
+    if len(sys.argv) < 3:
+        task2(False)
+    elif sys.argv[2] == 'single':
+        task2(True)
 elif sys.argv[1] == '--task3':
     if len(sys.argv) != 3:
         raise ValueError('Invalid number of houses. Enter a number')

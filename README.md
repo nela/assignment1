@@ -23,8 +23,14 @@ $ python solution.py --task1
 
 Task 2:
 
+Create a house with varied appliances:
 `
 $ python solution.py --task2
+`
+
+Create a house with the same set of additional appliances:
+`
+$ python solution.py --task2 single
 `
 
 Task 3:
