@@ -6,6 +6,11 @@ Project done by:
 - Finn Eivind Aasen
 - Nemanja Lakicevic
 
+## Requirements
+
+Required packages are listed in requirements.txt.
+Program has been tested with Python 3.9.1. Operating systems Windows and MacOs.
+
 ## Usage
 
 For solving the tasks run the ´solution.py´ script. The output will be printed to stdout.
