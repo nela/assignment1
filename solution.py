@@ -57,15 +57,15 @@ def task2():
     house = Household("My House", single=True)
     schedule = get_house_load_schedule(house, hourly_prices)
     total_daily_load = get_total_daily_load(house)
-    total_hourly_load = get_hourly_load(house)
+    total_hourly_load = get_hourly_load(schedule)
 
     print(f'Total Daily Load for {house.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
 
 
-def task3():
-    neighbourhood = Neighbourhood("Blindern", 5)
+def task3(num_houses):
+    neighbourhood = Neighbourhood("Blindern", num_houses)
     schedule = get_neighbourhood_load_schedule(neighbourhood, hourly_prices)
     total_daily_load = get_total_daily_load_neigbourhood(neighbourhood)
     total_hourly_load = get_hourly_load(schedule)
@@ -96,7 +96,10 @@ elif sys.argv[1] == '--task1':
 elif sys.argv[1] == '--task2':
     task2()
 elif sys.argv[1] == '--task3':
-    task3()
+    if len(sys.argv) != 3:
+        raise ValueError('Invalid number of houses. Enter a number')
+    print(f'Number of houses: {sys.argv[2]}')
+    task3(int(sys.argv[2]))
 elif sys.argv[1] == '--task4':
     if len(sys.argv) != 3:
         raise ValueError('Invalid peak_load. Enter a number')

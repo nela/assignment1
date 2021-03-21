@@ -14,7 +14,7 @@ class ElType(enum.Enum):
 class ElAppliance:
     #type : 1 = shiftable, 2 = non-shiftable non-continuous, 3 = non-shiftable
     def __init__(self, name, dailyUsageMin, dailyUsageMax, maxHourConsumption,
-            duration, elType, timeMin = 0, timeMax = 24):
+            duration, elType, timeMin=0, timeMax=24, actual_consumption=None):
         self.name = name
         self.dailyUsageMin = dailyUsageMin
         self.dailyUsageMax = dailyUsageMax
@@ -23,6 +23,17 @@ class ElAppliance:
         self.timeMax = timeMax
         self.maxHourConsumption = maxHourConsumption
         self.elType = elType
+
+        if actual_consumption is not None:
+            self.actual_consumption = actual_consumption
+        else:
+            self.actual_consumption = self.randomize_consumption(self.dailyUsageMin, self.dailyUsageMax)
+
+    def randomize_consumption(self, usage_min, usage_max):
+        if usage_min > usage_max:
+            return random.uniform(usage_min, usage_max)
+        else:
+            return usage_max
 
 
 class Household:
@@ -54,7 +65,6 @@ class Household:
 
         appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
         appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=12, timeMax=20))
-        appliances.append(ElAppliance("Refrigerator", 1.32, 3.9, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
         appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
 

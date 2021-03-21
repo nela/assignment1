@@ -31,6 +31,6 @@ def updated_hours_continuous(appliances: list, hourly_prices):
         optimal_hour = get_optimal_hours_for_continuous(a, hourly_prices)
         optimal_hour = optimal_hour[1]
         substitutions.append(ElAppliance(a.name, a.dailyUsageMin, a.dailyUsageMax,
-            a.maxHourConsumption, a.duration, a.elType, optimal_hour, optimal_hour+a.duration))
+            a.maxHourConsumption, a.duration, a.elType, optimal_hour, optimal_hour+a.duration, a.actual_consumption))
 
     return substitutions

@@ -17,7 +17,7 @@ def create_eq_constraints(appliance: list, hours=24):
 
         index += hours
         A_eq.append(a_eq)
-        b_eq.append(a.dailyUsageMax)
+        b_eq.append(a.actual_consumption)
 
     return A_eq, b_eq
 

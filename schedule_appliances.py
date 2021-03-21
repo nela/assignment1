@@ -88,7 +88,7 @@ def schedule_non_shiftable(non_shiftable: list, hour=24):
     names = []
     for a in non_shiftable:
         s = np.zeros(hour)
-        hourly_load = a.dailyUsageMax/a.duration
+        hourly_load = a.actual_consumption/a.duration
         for h in range(a.timeMin, a.timeMax):
             s[h] = hourly_load
 
