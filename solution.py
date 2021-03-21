@@ -45,8 +45,8 @@ def task1():
     house = []
     names = ['Electric Vehicle', 'Dishwasher', 'Laundry Machine']
     house.append(ElAppliance(names[0], 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
-    house.append(ElAppliance(names[1], 1.44, 1.44, 1.44, 1, ElType.shiftable, timeMin=14, timeMax=24))
-    house.append(ElAppliance(names[2], 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
+    house.append(ElAppliance(names[1], 1.44, 1.44, 1.44, 1, ElType.shiftable, timeMin=8, timeMax=17))
+    house.append(ElAppliance(names[2], 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=8, timeMax=22))
 
     names, schedule = get_load_schedule(house, task1_prices)
     df = pd.DataFrame([list(x) for x in zip(*schedule)], columns=names)
@@ -113,6 +113,3 @@ elif sys.argv[1] == '--task4':
         raise ValueError('Invalid peak_load. Enter a number')
     print(f'Peak Load:\t{sys.argv[2]}')
     task4(sys.argv[2])
-
-
-
