@@ -64,7 +64,7 @@ class Household:
         appliances = []
 
         appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
-        appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=11, timeMax=18))
+        appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.22, 0.073, 3, ElType.shiftable_non_continuous, timeMin=11, timeMax=18))
         appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
         appliances.append(ElAppliance("Cellphone charger", 0.01, 0.01, 0.003, 4, ElType.shiftable_non_continuous, timeMin=0, timeMax=12))
         appliances.append(ElAppliance("Microwave", 0.6, 0.6, 0.6, 1, ElType.shiftable, timeMin=17, timeMax=24))
@@ -75,7 +75,7 @@ class Household:
         appliances = []
 
         #appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
-        appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=11, timeMax=18))
+        appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.22, 0.073, 3, ElType.shiftable_non_continuous, timeMin=11, timeMax=18))
         appliances.append(ElAppliance("Freezer", 0.84, 0.84,  0.035, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Cloth Iron", 0.28, 0.28, 0.28, 1, ElType.shiftable, timeMin=19, timeMax=22))
         appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
