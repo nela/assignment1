@@ -93,6 +93,6 @@ class Neighbourhood:
         self.houses = []
 
         for i in range(num_houses):
-            self.houses.append(Household("House_" + str(i)))
+            self.houses.append(Household("House_" + str(i), False))
             if ((i % 4) == 0):
                 self.houses[i].elAppliance.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))

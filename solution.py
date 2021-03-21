@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 from schedule_appliances import get_house_load_schedule, \
         get_neighbourhood_load_schedule, get_total_daily_load, \
-        get_load_schedule, get_hourly_load
+        get_load_schedule, get_hourly_load, get_total_daily_load_neigbourhood
 from generate_rt_prices import daily_price
 from classes import ElAppliance, Household, Neighbourhood, ElType
 
@@ -10,7 +10,7 @@ from classes import ElAppliance, Household, Neighbourhood, ElType
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+pd.set_option('display.max_colwidth', None)
 
 # Hourly prices generated from daily_prices, min=0.2, max=0.99
 hourly_prices = [0.2232432246591243,
@@ -57,15 +57,22 @@ def task2():
     house = Household("My House", single=True)
     schedule = get_house_load_schedule(house, hourly_prices)
     total_daily_load = get_total_daily_load(house)
-    total_hourly_load = get_total_daily_load(house)
+    total_hourly_load = get_hourly_load(house)
 
-    print(f'Total Daily Load for {house.name}:\t{total_daily_load} ')
+    print(f'Total Daily Load for {house.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
 
 
 def task3():
-    pass
+    neighbourhood = Neighbourhood("Blindern", 5)
+    schedule = get_neighbourhood_load_schedule(neighbourhood, hourly_prices)
+    total_daily_load = get_total_daily_load_neigbourhood(neighbourhood)
+    total_hourly_load = get_hourly_load(schedule)
+
+    print(f'Total Daily Load for {neighbourhood.name}:\t{total_daily_load} kWh.')
+    print(schedule)
+    print(total_hourly_load)
 
 
 def task4(peak_load):
@@ -73,9 +80,9 @@ def task4(peak_load):
     schedule = get_house_load_schedule(house, hourly_prices, task4=True,
             peak_load=peak_load)
     total_daily_load = get_total_daily_load(house)
-    total_hourly_load = get_total_daily_load(house)
+    total_hourly_load = get_hourly_load(schedule)
 
-    print(f'Total Daily Load for {house.name}:\t{total_daily_load} ')
+    print(f'Total Daily Load for {house.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
 
@@ -93,7 +100,7 @@ elif sys.argv[1] == '--task3':
 elif sys.argv[1] == '--task4':
     if len(sys.argv) != 3:
         raise ValueError('Invalid peak_load. Enter a number')
-    print('Peak Load:\t{sys.argv[2]}')
+    print(f'Peak Load:\t{sys.argv[2]}')
     task4(sys.argv[2])
 
 

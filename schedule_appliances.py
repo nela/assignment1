@@ -12,10 +12,17 @@ def get_total_daily_load(house):
     return total_load
 
 
-def get_neighbourhood_load_schedule(neighbourhood: list, hourly_prices):
+def get_total_daily_load_neigbourhood(neighbourhood):
+    total_load = 0
+    for house in neighbourhood.houses:
+        total_load += get_total_daily_load(house)
+
+    return total_load
+
+def get_neighbourhood_load_schedule(neighbourhood, hourly_prices):
     house_list = []
     optimizable = []
-    for house in neighbourhood:
+    for house in neighbourhood.houses:
         for a in house.elAppliance:
             a.name = (house.name, a.name)
 
