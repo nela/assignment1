@@ -31,13 +31,13 @@ hourly_prices = [0.2232432246591243,
         0.4775919568309417,
         0.44726107193671527]
 
-
+print("\nResults")
 house_schedule = opt.get_house_load_schedule(house, hourly_prices)
 print(house_schedule)
 
 # neighbourhood_schedule = opt.get_neighbourhood_load_schedule(neighbourhood.houses, hourly_prices)
 # print(neighbourhood_schedule)
 
-
+print("\n")
 load = opt.get_total_daily_load(house)
 print(load)
