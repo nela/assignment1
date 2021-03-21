@@ -24,11 +24,13 @@ $ python solution.py --task1
 Task 2:
 
 Create a house with varied appliances:
+
 `
 $ python solution.py --task2
 `
 
 Create a house with the predetermined set of additional appliances:
+
 `
 $ python solution.py --task2 single
 `
@@ -42,6 +44,7 @@ $ python solution.py --task3 <number-of-houses>
 Task 4:
 
 Create a house with varied appliances and specified peak load:
+
 `
 $ python solution.py --task4 <hourly-peak-load>
 `
