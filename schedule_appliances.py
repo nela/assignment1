@@ -62,7 +62,6 @@ def get_load_schedule(appliances: list, hourly_prices: list, task4=False, peak_l
 
 
 def get_house_load_schedule(house, hourly_prices, task4=False, peak_load=None):
-    print(hourly_prices)
     names, schedule = get_load_schedule(house.elAppliance, hourly_prices,
             task4=task4, peak_load=peak_load)
 

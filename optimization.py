@@ -39,7 +39,6 @@ def create_ub_constraints(appliances: list, hours=24, task4=False, peak_load=Non
         index += hours
 
     if task4:
-        print("PEEEEAAAAK LOOOOOOAAAAD", peak_load)
         if peak_load is None:
             raise ValueError("Input peak load in order to balance load")
         for h in range(hours):
@@ -64,7 +63,7 @@ def optimization_appliance_schedule(appliances: list,
     options = { 'cholesky': False, 'sym_pos': False }
     res = linprog(c, A_ub, b_ub, A_eq, b_eq, options=options)
     # res = linprog(c, A_ub, b_ub, A_eq, b_eq)
-    # print(res)
+    print(res.success, '\n', res.status, '\n', res.message, '\n')
     x = np.round_(res.x, decimals=4)
 
     return [x[i:(i+24)] for i in range(0, len(x), 24)]

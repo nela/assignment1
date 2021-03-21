@@ -54,7 +54,7 @@ def task1():
 
 
 def task2():
-    house = Household("My House")
+    house = Household("My House", single=True)
     schedule = get_house_load_schedule(house, hourly_prices)
     total_daily_load = get_total_daily_load(house)
     total_hourly_load = get_total_daily_load(house)
@@ -69,7 +69,7 @@ def task3():
 
 
 def task4(peak_load):
-    house = Household("My House")
+    house = Household("My House", single=True)
     schedule = get_house_load_schedule(house, hourly_prices, task4=True,
             peak_load=peak_load)
     total_daily_load = get_total_daily_load(house)

@@ -26,9 +26,14 @@ class ElAppliance:
 
 
 class Household:
-    def __init__(self, name):
+    def __init__(self, name: str, single: bool):
         self.name = name
-        self.elAppliance = self.make_standard_appliances() + self.make_aux_appliancesFast()
+
+        if single:
+            self.elAppliance = self.make_standard_appliances() + self.make_aux_appliancesFast()
+        else:
+            self.elAppliance = self.make_standard_appliances() + self.make_aux_appliances()
+
 
     def make_standard_appliances(self):
         appliances = []
