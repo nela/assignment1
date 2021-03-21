@@ -50,6 +50,7 @@ def task1():
 
     names, schedule = get_load_schedule(house, task1_prices)
     df = pd.DataFrame([list(x) for x in zip(*schedule)], columns=names)
+    print_prices(task1_prices)
     print(df)
 
 
@@ -59,6 +60,7 @@ def task2():
     total_daily_load = get_total_daily_load(house)
     total_hourly_load = get_hourly_load(schedule)
 
+    print_prices(hourly_prices)
     print(f'Total Daily Load for {house.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
@@ -70,6 +72,7 @@ def task3(num_houses):
     total_daily_load = get_total_daily_load_neigbourhood(neighbourhood)
     total_hourly_load = get_hourly_load(schedule)
 
+    print_prices(hourly_prices)
     print(f'Total Daily Load for {neighbourhood.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
@@ -82,13 +85,14 @@ def task4(peak_load):
     total_daily_load = get_total_daily_load(house)
     total_hourly_load = get_hourly_load(schedule)
 
+    print_prices(hourly_prices)
     print(f'Total Daily Load for {house.name}:\t{total_daily_load} kWh.')
     print(schedule)
     print(total_hourly_load)
 
 
-def print_prices():
-    df = pd.DataFrame(hourly_prices, columns=["Hourly Prices"])
+def print_prices(prices):
+    df = pd.DataFrame(prices, columns=["Hourly Prices"])
     print(df)
 
 
@@ -96,22 +100,18 @@ if len(sys.argv) < 2:
     print('Run the script with \'python solution.py --task1 || --task2 || \
             --task3 || --task4 <peak_load: float>\' ')
 elif sys.argv[1] == '--task1':
-    print_prices()
     task1()
 elif sys.argv[1] == '--task2':
-    print_prices()
     task2()
 elif sys.argv[1] == '--task3':
     if len(sys.argv) != 3:
         raise ValueError('Invalid number of houses. Enter a number')
     print(f'Number of houses: {sys.argv[2]}')
-    print_prices()
     task3(int(sys.argv[2]))
 elif sys.argv[1] == '--task4':
     if len(sys.argv) != 3:
         raise ValueError('Invalid peak_load. Enter a number')
     print(f'Peak Load:\t{sys.argv[2]}')
-    print_prices()
     task4(sys.argv[2])
 
 
