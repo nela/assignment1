@@ -12,10 +12,17 @@ def get_total_daily_load(house):
     return total_load
 
 
-def get_neighbourhood_load_schedule(neighbourhood: list, hourly_prices):
+def get_total_daily_load_neigbourhood(neighbourhood):
+    total_load = 0
+    for house in neighbourhood.houses:
+        total_load += get_total_daily_load(house)
+
+    return total_load
+
+def get_neighbourhood_load_schedule(neighbourhood, hourly_prices):
     house_list = []
     optimizable = []
-    for house in neighbourhood:
+    for house in neighbourhood.houses:
         for a in house.elAppliance:
             a.name = (house.name, a.name)
 
@@ -62,7 +69,6 @@ def get_load_schedule(appliances: list, hourly_prices: list, task4=False, peak_l
 
 
 def get_house_load_schedule(house, hourly_prices, task4=False, peak_load=None):
-    print(hourly_prices)
     names, schedule = get_load_schedule(house.elAppliance, hourly_prices,
             task4=task4, peak_load=peak_load)
 
@@ -82,7 +88,7 @@ def schedule_non_shiftable(non_shiftable: list, hour=24):
     names = []
     for a in non_shiftable:
         s = np.zeros(hour)
-        hourly_load = a.dailyUsageMax/a.duration
+        hourly_load = a.actual_consumption/a.duration
         for h in range(a.timeMin, a.timeMax):
             s[h] = hourly_load
 
