@@ -79,6 +79,13 @@ class Household:
         # random.sample velger ut random appliances med antall=num_appliances
         return copy.deepcopy(random.sample(appliances, num_appliances))
 
+    def remake_appliances(self,test):
+        self.elAppliance.clear()
+        if test is True:
+            self.elAppliance = self.make_standard_appliances() + self.make_aux_appliancesFast()
+        else:
+            self.elAppliance = self.make_standard_appliances() + self.make_aux_appliances()
+
 
 class Neighbourhood:
     def __init__(self, name, num_houses):
