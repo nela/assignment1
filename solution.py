@@ -87,23 +87,31 @@ def task4(peak_load):
     print(total_hourly_load)
 
 
+def print_prices():
+    df = pd.DataFrame(hourly_prices, columns=["Hourly Prices"])
+    print(df)
+
+
 if len(sys.argv) < 2:
     print('Run the script with \'python solution.py --task1 || --task2 || \
             --task3 || --task4 <peak_load: float>\' ')
 elif sys.argv[1] == '--task1':
-    print("here")
+    print_prices()
     task1()
 elif sys.argv[1] == '--task2':
+    print_prices()
     task2()
 elif sys.argv[1] == '--task3':
     if len(sys.argv) != 3:
         raise ValueError('Invalid number of houses. Enter a number')
     print(f'Number of houses: {sys.argv[2]}')
+    print_prices()
     task3(int(sys.argv[2]))
 elif sys.argv[1] == '--task4':
     if len(sys.argv) != 3:
         raise ValueError('Invalid peak_load. Enter a number')
     print(f'Peak Load:\t{sys.argv[2]}')
+    print_prices()
     task4(sys.argv[2])
 
 
