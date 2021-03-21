@@ -53,6 +53,7 @@ class Household:
         appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=12, timeMax=20))
         appliances.append(ElAppliance("Refrigerator", 1.32, 3.9, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
+        appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
         # .... Resten av aux appliances
 
         # random.sample velger ut random appliances med antall=num_appliances
@@ -63,8 +64,13 @@ class Household:
 
         appliances.append(ElAppliance("EV", 9.9, 9.9, 3.3, 3, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
         appliances.append(ElAppliance("Ceiling Fan", 0.22, 0.21, 0.073, 3, ElType.shiftable_non_continuous, timeMin=12, timeMax=20))
-        appliances.append(ElAppliance("Refrigerator", 1.32, 3.96, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
-        appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
+        appliances.append(ElAppliance("Freezer", 0.84, 0.84,  0.035, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
+        appliances.append(ElAppliance("Cloth Iron", 0.28, 0.28, 0.28, 1, ElType.shiftable, timeMin=10, timeMax=20))
+        appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
+        appliances.append(ElAppliance("Cellphone charger", 0.01, 0.01, 0.003, 4, ElType.shiftable_non_continuous, timeMin=0, timeMax=12))
+        appliances.append(ElAppliance("Microwave", 0.6, 0.6, 0.6, 1, ElType.shiftable, timeMin=17, timeMax=24))
+        appliances.append(ElAppliance("Hair Dryer", 0.19, 0.19, 0.19, 1, ElType.shiftable, timeMin=19, timeMax=23))
+        appliances.append(ElAppliance("Toaster", 0.3, 0.3, 0.3, 1, ElType.shiftable, timeMin=12, timeMax=20))
         # .... Resten av aux appliances
 
         # Velg antall random appliances mellom 2 og antall appliances i lista
