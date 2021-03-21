@@ -50,7 +50,7 @@ class Household:
         appliances = []
         appliances.append(ElAppliance("Lighting", 1, 2, 0.2, 10, ElType.non_shiftable, timeMin=10, timeMax=20))
         appliances.append(ElAppliance("Heating", 6.4, 9.6, 0.4, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
-        appliances.append(ElAppliance("Stove", 3.9, 3.9, 2, 3, ElType.non_shiftable, timeMin=15, timeMax=20))
+        appliances.append(ElAppliance("Stove", 3.9, 3.9, 2, 3, ElType.shiftable, timeMin=15, timeMax=20))
         appliances.append(ElAppliance("Refrigerator", 1.32, 3.9, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("TV", 0.15, 0.6, 0.12, 5, ElType.non_shiftable, timeMin=12, timeMax=23))
         appliances.append(ElAppliance("Computer", 0.6, 0.6, 0.1, 6, ElType.non_shiftable, timeMin=8, timeMax=23))
