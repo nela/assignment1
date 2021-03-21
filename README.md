@@ -29,6 +29,7 @@ Create a house with varied appliances:
 $ python solution.py --task2
 `
 
+Execute this command to get the same results as described in the report for task 2.
 Create a house with the predetermined set of additional appliances:
 
 `
@@ -53,4 +54,12 @@ Create a house with the predetermined set of additional appliances (same applian
 
 `
 $ python solution.py --task4 <hourly-peak-load> single
+`
+
+For the 'single' house with predetermined set of additional appliances the
+lowest peak load for a successfull optimization is 3.6. In order to get the same
+results as described in the report, execute:
+
+`
+$ python solution.py --task4 3.6 single
 `
