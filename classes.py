@@ -45,10 +45,8 @@ class Household:
         appliances.append(ElAppliance("Computer", 0.6, 0.6, 0.1, 6, ElType.non_shiftable_non_continuous, timeMin=8, timeMax=23))
         appliances.append(ElAppliance("Dishwasher", 1.44, 1.44, 1.44, 1, ElType.shiftable, timeMin=8, timeMax=17))
         appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=8, timeMax=22))
-        appliances.append(ElAppliance("Cloth Dryer", 2.5, 2.5, 2.5, 1, ElType.shiftable, timeMin=18, timeMax=22))
-        #.... Resten av standarde appliances
+        appliances.append(ElAppliance("Cloth Dryer", 2.5, 2.5, 2.5, 1, ElType.shiftable, timeMin=0, timeMax=20))
 
-        # Deeop copy for å unngå statisk dritt
         return copy.deepcopy(appliances)
 
     def make_aux_appliancesFast(self):
@@ -59,9 +57,7 @@ class Household:
         appliances.append(ElAppliance("Refrigerator", 1.32, 3.9, 0.164, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Laundry Machine", 1.94, 1.94, 0.485, 4, ElType.shiftable, timeMin=0, timeMax=18))
         appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
-        # .... Resten av aux appliances
 
-        # random.sample velger ut random appliances med antall=num_appliances
         return copy.deepcopy(appliances)
 
     def make_aux_appliances(self):
@@ -72,16 +68,13 @@ class Household:
         appliances.append(ElAppliance("Freezer", 0.84, 0.84,  0.035, 24, ElType.non_shiftable, timeMin=0, timeMax=24))
         appliances.append(ElAppliance("Cloth Iron", 0.28, 0.28, 0.28, 1, ElType.shiftable, timeMin=19, timeMax=22))
         appliances.append(ElAppliance("Router", 0.14, 0.14, 0.006, 24, ElType.non_shiftable, timeMin=0,timeMax=24))
-        appliances.append(ElAppliance("Cellphone charger", 0.01, 0.01, 0.003, 4, ElType.shiftable_non_continuous, timeMin=0, timeMax=8))
-        appliances.append(ElAppliance("Microwave", 0.6, 0.6, 0.6, 1, ElType.shiftable, timeMin=16, timeMax=19))
-        appliances.append(ElAppliance("Hair Dryer", 0.19, 0.19, 0.19, 1, ElType.shiftable, timeMin=8, timeMax=21))
-        appliances.append(ElAppliance("Toaster", 0.3, 0.3, 0.3, 1, ElType.shiftable, timeMin=8, timeMax=12))
-        # .... Resten av aux appliances
+        appliances.append(ElAppliance("Cellphone charger", 0.01, 0.01, 0.003, 4, ElType.shiftable_non_continuous, timeMin=0, timeMax=12))
+        appliances.append(ElAppliance("Microwave", 0.6, 0.6, 0.6, 1, ElType.shiftable, timeMin=17, timeMax=24))
+        appliances.append(ElAppliance("Hair Dryer", 0.19, 0.19, 0.19, 1, ElType.shiftable, timeMin=19, timeMax=23))
+        appliances.append(ElAppliance("Toaster", 0.3, 0.3, 0.3, 1, ElType.shiftable, timeMin=12, timeMax=20))
 
-        # Velg antall random appliances mellom 2 og antall appliances i lista
         num_appliances = random.randint(2, len(appliances)-1)
 
-        # random.sample velger ut random appliances med antall=num_appliances
         return copy.deepcopy(random.sample(appliances, num_appliances))
 
     def remake_appliances(self,test):
